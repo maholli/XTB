@@ -3,7 +3,7 @@ In-situ device driver & data acquisition board for use in Stanford's eXtreme Env
 
 
 
-![](https://github.com/maholli/XTB/blob/master/Media/XTB_pinout.png "XTB-10 Pinout")
+![](https://github.com/maholli/XTB/blob/master/media/XTB_pinout.png "XTB-10 Pinout")
 
 
 * Design centers around TI's multi-functional 24bit ADC [ADS124S08](http://www.ti.com/product/ADS124S08)
