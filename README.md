@@ -4,4 +4,6 @@ In-situ device driver & data acquisition board for use in Stanford's eXtreme Env
 * 4-layer PCB can be ordered at OSH Park: [https://oshpark.com/shared_projects/zCFHqtC3 ](https://oshpark.com/shared_projects/zCFHqtC3 )
 
 <img src="https://github.com/maholli/XTB/blob/master/media/xtb-20_labeled.PNG">
-<img src="https://github.com/maholli/XTB/blob/master/media/xtb-20_DUT_labeled.PNG">
+<p align="center">
+  <img width="500" src="https://github.com/maholli/XTB/blob/master/media/xtb-20_DUT_labeled.PNG">
+</p>
