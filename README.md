@@ -7,3 +7,4 @@ In-situ device driver & data acquisition board for use in Stanford's eXtreme Env
 <p align="center">
   <img width="500" src="https://github.com/maholli/XTB/blob/master/media/xtb-20_DUT_labeled.PNG">
 </p>
+<img src="https://github.com/maholli/XTB/blob/master/media/xtb-20_schematic.PNG">
