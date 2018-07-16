@@ -121,6 +121,8 @@ void loop() {
 
 
 void hallSpin() {
+  //TODO: softcode the values for this
+  
   /* HALL SPIN -- A --*/
   float rDataA = 0;
   writeReg(0x42, 0x60); //mux 6, 0
@@ -457,6 +459,11 @@ void IDAC(bool setIDAC, byte valIDAC, byte pinIDAC){
     }
 }
 
+void printTimeStamp() {
+  //TODO: don't use millis
+  Serial.print(millis());
+}
+
 /*Reset ADC with command + reset pin --- WORKING ---*/
 void resetADC() {
   Serial.println("---Resetting ADC---");
@@ -502,7 +509,7 @@ float readData1(bool showHex, int scalar, bool printData) { //read the ADC data 
   }
 //  Serial.print("Voltage (V): ");
   //if (printData) {
-    Serial.print(millis());
+    printTimestamp();
     Serial.print(",");
     Serial.println(decVal, DEC);
   //}
