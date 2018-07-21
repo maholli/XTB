@@ -121,33 +121,41 @@ void loop() {
 
 
 void hallSpin() {
-  //TODO: softcode the values for this
-  
+//  6
+//2 + 3
+//  0
+
   /* HALL SPIN -- A --*/
   float rDataA = 0;
-  writeReg(0x42, 0x60); //mux 6, 0
+  //writeReg(0x42, 0x60); //mux 6, 0
+  setInputMUX(cs_pin_N, cs_pin_S);
   delay(5);
-  writeReg(0x48, 0x08); //gain AIN3
+  //writeReg(0x48, 0x08); //vbias AIN3
+  hallVbias(cs_pin_E);
   delay(5);
-  IDAC(true, 0x04, 0xF2); //set pin 2 to 250uA
+  //IDAC(true, 0x04, 0xF2); //set pin 2 to 250uA
+  setIDAC(-1, cs_pin_W, 250);
 //  delay(50);
 //  SFOCAL();
-  delay(20);
+  delay(5);
   rDataA = readData1(showHex = false, 1, false);
  
  /* HALL SPIN -- B --*/
   float rDataB = 0;
-  writeReg(0x42, 0x23); //mux 2, 3
+  //writeReg(0x42, 0x23); //mux 2, 3
+  setInputMUX(cs_pin_W, cs_pin_E);
   delay(5);
-  writeReg(0x48, 0x01); //gain AIN0
-  delay(20);
-  IDAC(true, 0x04, 0xF6); //IDAC 250uA on pin 6
+  //writeReg(0x48, 0x01); //vbias AIN0
+  hallVbias(cs_pin_S);
+  delay(5);
+  //IDAC(true, 0x04, 0xF6); //IDAC 250uA on pin 6
+  setIDAC(-1, cs_pin_N, 250);
 //  delay(50);
 //  SFOCAL();
   delay(5);
   rDataB = readData1(showHex = false, 1, false);
   float dataSpin = (rDataA-rDataB)*1;
-  Serial.print(millis());
+  printTimeStamp();
   Serial.print(",");
   Serial.println(dataSpin, DEC);
 }
@@ -202,7 +210,6 @@ void handleCommand() {
     }
     setIDAC(a, b, c);
   } else if (argv[0] == "setpga") {
-    Serial.println(argv[1]);
     if (argv[1] == "Bypassed") {
       setPGA(0);
     } else if (argv[1] == "IP_Buffer_Bypassed") {
@@ -238,7 +245,10 @@ void handleCommand() {
       current_spinning_mode = true;
     }
   } else if (argv[0] == "setcspins") {
-    
+    cs_pin_N = argv[1];
+    cs_pin_E = argv[2];
+    cs_pin_W = argv[3];
+    cs_pin_S = argv[4];
   }
 }
 
@@ -316,7 +326,6 @@ void setFilter(bool latency) {
 void setVbiasPins(int a, int b, int c, int d, int e, int f) {
   byte val = 0x0;
   val |= (a | (b << 1) | (c << 2) | (d << 3) | (e << 4) | (f << 5));
-  Serial.println(val);
   vbias_reg &= 0x80;
   vbias_reg |= val;
   writeReg(0x48, vbias_reg);
@@ -411,6 +420,11 @@ void setInputMUX(int AINx, int AINy) {
   writeReg(0x42, val);
 }
 
+void hallVbias(int pin) {
+  byte val = (1 << pin);
+  writeReg(0x48, val);
+}
+
 /*Start ADC with command + SYNC pin --- WORKING ---*/
 void startADC() {
   //Serial.println("---Starting ADC---");
@@ -466,7 +480,7 @@ void printTimeStamp() {
 
 /*Reset ADC with command + reset pin --- WORKING ---*/
 void resetADC() {
-  Serial.println("---Resetting ADC---");
+  //Serial.println("---Resetting ADC---");
   digitalWrite(chipSelectPin, LOW);
   SPI.transfer(0x06); //send reset byte
   digitalWrite(resetPin, LOW);
@@ -491,7 +505,7 @@ float readData1(bool showHex, int scalar, bool printData) { //read the ADC data 
 
   /*Print the HEX value (if showHex = true)*/
   if (showHex == 1){
-    Serial.print("HEX Value: ");
+    //Serial.print("HEX Value: ");
     Serial.print(inByte1,HEX), Serial.print(inByte2,HEX), Serial.println(inByte3,HEX);
   }
   
