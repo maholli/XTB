@@ -245,10 +245,10 @@ void handleCommand() {
       current_spinning_mode = true;
     }
   } else if (argv[0] == "setcspins") {
-    cs_pin_N = argv[1];
-    cs_pin_E = argv[2];
-    cs_pin_W = argv[3];
-    cs_pin_S = argv[4];
+    cs_pin_N = argv[1].toInt();
+    cs_pin_E = argv[2].toInt();
+    cs_pin_W = argv[3].toInt();
+    cs_pin_S = argv[4].toInt();
   }
 }
 
