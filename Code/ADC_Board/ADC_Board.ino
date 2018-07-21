@@ -1,11 +1,10 @@
-#include <SPI.h>
-#define chipSelectPin 18//P3_0
-#define startSync 32//P3_5
-#define resetPin 31//P3_7
-//#define DRDY 7
+//XTB-20 board configured for a mini breakout (samd21)
 
-//const int TX_LED = PIN_LED_TXL;  //SAMD21 green LED
-//const int RX_LED = PIN_LED_RXL;  //SAMD21 yellow LED
+#include <SPI.h>
+#define chipSelectPin 3
+#define startSync 9
+#define resetPin 8
+
 bool PGAen = false;
 bool startUP = false;
 bool resetMe= false;
@@ -35,10 +34,8 @@ byte gain_pga_reg = 0x8;
 
 
 void setup() {
-  SerialUSB.begin(115200);//115200
+  SerialUSB.begin(115200);
   delay(3);
-  //pinMode(RX_LED, OUTPUT);
-  //pinMode(TX_LED, OUTPUT);
   SerialUSB.println("Serial Connected");
   pinMode(resetPin,OUTPUT);
   pinMode(chipSelectPin,OUTPUT); 
@@ -49,10 +46,7 @@ void setup() {
   delayMicroseconds(1);
   delay(500);
   SPI.begin();
-  //SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE1));
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setDataMode(SPI_MODE1);
-  //SPI.setClockDivider();
+  SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE1));
   
   /* inital startup routine (including reset)*/ 
   delay(100);
@@ -63,7 +57,7 @@ void setup() {
   digitalWrite(chipSelectPin, LOW);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x07);   //how many registers to write to
-  SPI.transfer(0x8A);//23   //0x42  INPMUX 
+  SPI.transfer(0xCC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
   SPI.transfer(0x17);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
@@ -73,31 +67,8 @@ void setup() {
   SPI.transfer(0x10);   //0x49  SYS
   delay(1);
   digitalWrite(chipSelectPin, HIGH);
-  delay(3000);
-  
-  //startADC();
-  //delay(100);
-
-  /*Read all the register values*/ 
-//  delay(500);
-//  SFOCAL();
-//  delay(2000);
-  //regReadout();
-  //delay(10);
-
-
-
-
-
-
-  /*writeReg(0x48, 0x8D); //0x8D is VB/12 w/ AIN3 AIN2 AIN0 enabled
-  delay(10);
-  IDAC(true, 0x04, 0xF6); //0x04 is 250uA 0xF6 is AIN6 enabled
-  delay(100);*/
+  delay(3000);  
 }
-
-
-
 
 
 
@@ -114,49 +85,65 @@ void loop() {
     }
     delay(75);
   } else {
-    hallSpin();
+    hallSpin(50,0);
   }
 }
+/*------------------------------------------------*/
+/*------------------------------------------------*/
 
 
-void hallSpin() {
-//  6
-//2 + 3
-//  0
 
-  /* HALL SPIN -- A --*/
+
+
+void hallSpin(int dTime, int hallDebug) {
+//  N
+//W + E
+//  S
+
+  /* HALL SPIN -- phase 1 --*/
+  float tPhaseTot = micros();
+  float tPhase1 = micros();
   float rDataA = 0;
-  //writeReg(0x42, 0x60); //mux 6, 0
   setInputMUX(cs_pin_N, cs_pin_S);
+  delay(5);  
+  hallVbias(cs_pin_E); //0.0275V
   delay(5);
-  //writeReg(0x48, 0x08); //vbias AIN3
-  hallVbias(cs_pin_E);
+  setIDAC(-1, cs_pin_W, 100);
   delay(5);
-  //IDAC(true, 0x04, 0xF2); //set pin 2 to 250uA
-  setIDAC(-1, cs_pin_W, 250);
-//  delay(50);
-//  SFOCAL();
-  delay(5);
-  rDataA = readData1(showHex = false, 1, false);
- 
- /* HALL SPIN -- B --*/
+  rDataA = readData1(showHex = false, 1, false) - 0.0275;
+  tPhase1 = micros()-tPhase1;
+  
+  delay(dTime);
+  
+  /* HALL SPIN -- phase 2 --*/
+  float tPhase2 = micros(); 
   float rDataB = 0;
-  //writeReg(0x42, 0x23); //mux 2, 3
   setInputMUX(cs_pin_W, cs_pin_E);
   delay(5);
-  //writeReg(0x48, 0x01); //vbias AIN0
-  hallVbias(cs_pin_S);
+  hallVbias(cs_pin_S); //0.0275V
   delay(5);
-  //IDAC(true, 0x04, 0xF6); //IDAC 250uA on pin 6
-  setIDAC(-1, cs_pin_N, 250);
-//  delay(50);
-//  SFOCAL();
+  setIDAC(-1, cs_pin_N, 100);
   delay(5);
-  rDataB = readData1(showHex = false, 1, false);
-  float dataSpin = (rDataA-rDataB)*1;
-  printTimeStamp();
-  SerialUSB.print(",");
-  SerialUSB.println(dataSpin, DEC);
+  rDataB = readData1(showHex = false, 1, false) - 0.0275;
+  tPhase2 = micros()-tPhase2;
+  if (hallDebug == 1){    
+    float dataSpin = (rDataA-rDataB)*1;
+    printTimeStamp();
+    SerialUSB.print(",");
+    SerialUSB.print(dataSpin, DEC);
+    SerialUSB.print(",");
+    SerialUSB.print(" Phase 1 (us): ");
+    SerialUSB.print(tPhase1, 4);
+    SerialUSB.print(",");
+    SerialUSB.print(" Phase 2 (us): ");
+    SerialUSB.print(tPhase2, 4);
+    tPhaseTot = micros()-tPhaseTot;   
+    SerialUSB.print(",");
+    SerialUSB.print(" Total Time (sec): ");
+    SerialUSB.print(tPhaseTot*0.000001,4);
+    SerialUSB.print("Switching Freq (Hz): ");
+    SerialUSB.println(1/(tPhaseTot*0.000001),4);
+  }
 }
 /*------------------------------------------------*/
 
@@ -187,12 +174,12 @@ void handleCommand() {
   } else if (argv[0] == "setinputpins") {
     int aaa, bbb;
     if (argv[1] == "COM") {
-      aaa = 13;
+      aaa = 12;
     } else {
       aaa = argv[1].toInt();
     }
     if (argv[2] == "COM") {
-      bbb = 13;
+      bbb = 12;
     } else {
       bbb = argv[2].toInt();
     }
@@ -240,7 +227,7 @@ void handleCommand() {
       setChop(false);
     }
   } else if (argv[0] == "setvbias") {
-    if (argv[1] == "Supply/12") {
+    if (argv[1] == "1.65V") {
       vbias_reg |= 0x80;
     } else {
       vbias_reg &= 0x7f;
@@ -259,7 +246,50 @@ void handleCommand() {
     cs_pin_E = argv[2].toInt();
     cs_pin_W = argv[3].toInt();
     cs_pin_S = argv[4].toInt();
+  } else if (argv[0] == "systest") {
+    sysTest();
+  } else if (argv[0] == "readtemp") {
+    readTemp();
   }
+}
+
+
+void sysTest(){
+  SerialUSB.println("");
+  delay(5); 
+  setInputMUX(5,6);
+  delay(5);  
+  writeReg(0x49, 0x30); //inputs shorted to mid-supply
+  delay(50);  
+  if (active) {
+    for (int j=1; j<=50; j++){
+      readData1(showHex = false, 1000, true);
+      delay(75);    
+    }
+  }
+  writeReg(0x49, 0x10);
+  delay(5); 
+  setInputMUX(12,12);
+  delay(5);
+  SerialUSB.println("");
+}
+
+void readTemp() {
+  delay(5);
+  writeReg(0x49, 0x50); //enable internal temp monitor
+  delay(20);
+  float a = readData1(false,1000,false); //read adc in mV
+  SerialUSB.print("Temperature: ");
+  if (a < 129){
+//    SerialUSB.print(a,DEC),SerialUSB.print("  ");
+    SerialUSB.print((-1*(129.00-a)*0.403)+25), SerialUSB.println(" degrees C");
+  }
+  else {
+//    SerialUSB.print(a,DEC),SerialUSB.print("  ");
+    SerialUSB.print(((129.00-a)*0.403)+25), SerialUSB.println(" degrees C");
+  }
+  writeReg(0x49, 0x10); //disable internal temp monitor
+  delay(75);  
 }
 
 void parseMessage(String msg, String arg[]) {
@@ -278,14 +308,6 @@ void parseMessage(String msg, String arg[]) {
   }
   arg[wordIndex] = msg.substring(wordStart, index);
 }
-
-
-
-
-
-
-
-
 
 
 void setDataRate(int sps) {
@@ -431,7 +453,7 @@ void setInputMUX(int AINx, int AINy) {
 }
 
 void hallVbias(int pin) {
-  byte val = (1 << pin);
+  byte val = (1 << pin)|0x80;
   writeReg(0x48, val);
 }
 
@@ -540,28 +562,6 @@ float readData1(bool showHex, int scalar, bool printData) { //read the ADC data 
   return decVal;
 }
 
-
-/*Read internal temperature --- NOT WORKING ---*/
-void readTemp() {
-  if (PGAen = true){
-    digitalWrite(chipSelectPin, LOW);
-    SPI.transfer(0x49); //system register
-    SPI.transfer(0x00); //
-    SPI.transfer(0x50); //internal temp ON
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);
-    readData1(showHex = true, 1, true); 
-    delay(10);
-    readData1(showHex = true, 1, true);
-    digitalWrite(chipSelectPin, LOW);
-    SPI.transfer(0x49); //temperature readout register
-    SPI.transfer(0x00); //
-    SPI.transfer(0x10); //internal temp OFF
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);        
-  }
-}
-
 /*Write register value --- WORKING ---*/
 void writeReg(byte address, byte thisValue) {
   digitalWrite(chipSelectPin, LOW);
@@ -641,21 +641,13 @@ void regReadout(){
   SerialUSB.println("-----------------------------");
 }
 
-/*Initiate Self Calibration --- UNKNOWN ---*/
+/*Initiate Self Calibration --- WORKING (kinda?) ---*/
 void SFOCAL() {
-  SerialUSB.println("Self Calibration");
+//  SerialUSB.println("Self Calibration");
   digitalWrite(chipSelectPin, LOW);
-//  writeReg(0x49,0x38); //configure register for self offset
-//  delay(100);
   SPI.transfer(0x19); //send self offset command
-  delay(200);
-  readReg(0x2A); //read out the offset registers (3 of them)
   delay(1);
-  readReg(0x2B);
-  delay(1);
-  readReg(0x2C);
-  delay(100);
-  writeReg(0x49,0x10);
-  delay(1); 
   digitalWrite(chipSelectPin, HIGH);
+  delay(100);
 }
+
