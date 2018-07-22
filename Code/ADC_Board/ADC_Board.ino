@@ -91,42 +91,29 @@ void hallSpin(int dTime) {
 //  float tPhaseTot = micros();
 //  float tPhase1 = micros();
   delay(dTime);
-  float rDataA = 0;
   float decVal_1 = 0;
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x13);   //0x42  INPMUX 
+  SPI.transfer(0x31);   //0x42  INPMUX 
   SPI.transfer(0xE8);   //0x43  PGA
-  SPI.transfer(0x1C);   //0x44  DATARATE
+  SPI.transfer(0x9D);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x03);   //0x46  IDACMAG
   SPI.transfer(0xF2);   //0x47  IDACMUX
   SPI.transfer(0x81);   //0x48  VBIAS
+  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  SPI.transfer(0x25);   //RREG trick to force DRDY high
+  delay(8);
+  SPI.transfer(0x12); //transfer read command  
+  inByte1 = SPI.transfer(0x00);
+  inByte2 = SPI.transfer(0x00);
+  inByte3 = SPI.transfer(0x00);
   delay(1);
-  digitalWrite(chipSelectPin, HIGH); 
-  delay(5);
-  digitalWrite(chipSelectPin, LOW);
-  delayMicroseconds(1); 
-  if (digitalRead(12)==0){
-    SPI.transfer(0x12); //transfer read command  
-    inByte1 = SPI.transfer(0x00);
-    inByte2 = SPI.transfer(0x00);
-    inByte3 = SPI.transfer(0x00);
-    SPI.transfer(0x00);
-    SPI.transfer(0x25);   //RREG trick to force DRDY high
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);
-  }
-  else{
-    SerialUSB.println("conversion error");
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);
-  }
+  digitalWrite(chipSelectPin, HIGH);
+
   /* convert data from phase 1 --*/
   int rawData1 = 0; //create an empty 24 bit integer for the data
   rawData1 |= inByte1; //shift the data in one byte at a time
@@ -138,44 +125,32 @@ void hallSpin(int dTime) {
     decVal_1 = rawData1 * LSBsize * -1;}
   else{ //if it's not negative
     decVal_1 = float(rawData1)*LSBsize;} //then just multiply by LSBsize
-  delay(50);
+  delay(10);
   
   /* HALL SPIN -- phase 2 --*/
   float decVal_2 = 0;
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);   
   SPI.transfer(0x42);   //Send register START location
-  SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x02);   //0x42  INPMUX 
+  SPI.transfer(0x60);   //how many registers to write to
+  SPI.transfer(0x20);   //0x42  INPMUX 
   SPI.transfer(0xE8);   //0x43  PGA
-  SPI.transfer(0x1C);   //0x44  DATARATE
+  SPI.transfer(0x9D);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x03);   //0x46  IDACMAG
-  SPI.transfer(0xF3);   //0x47  IDACMUX
-  SPI.transfer(0x82);   //0x48  VBIAS
+  SPI.transfer(0xF1);   //0x47  IDACMUX
+  SPI.transfer(0x88);   //0x48  VBIAS
+  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  SPI.transfer(0x25);   //RREG trick to force DRDY high
+  delay(8);
+  SPI.transfer(0x12); //transfer read command  
+  inByte4 = SPI.transfer(0x00);
+  inByte5 = SPI.transfer(0x00);
+  inByte6 = SPI.transfer(0x00);
   delay(1);
-  digitalWrite(chipSelectPin, HIGH); 
-  delay(5);
-  digitalWrite(chipSelectPin, LOW);
-  delayMicroseconds(1); 
-  if (digitalRead(12)==0){
-    SPI.transfer(0x12); //transfer read command  
-    inByte1 = SPI.transfer(0x00);
-    inByte2 = SPI.transfer(0x00);
-    inByte3 = SPI.transfer(0x00);
-    SPI.transfer(0x00);
-    SPI.transfer(0x25);   //RREG trick to force DRDY high
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);
-  }
-  else{
-    SerialUSB.println("conversion error");
-    delay(1);
-    digitalWrite(chipSelectPin, HIGH);
-  }
+  digitalWrite(chipSelectPin, HIGH);
+
   /* convert data from phase 2 --*/
   int rawData2 = 0; //create an empty 24 bit integer for the data
   rawData2 |= inByte4; //shift the data in one byte at a time
@@ -190,7 +165,7 @@ void hallSpin(int dTime) {
   float dataSpin = (decVal_1-decVal_2)*1000; //output in mV
   printTimeStamp();
   SerialUSB.print(",");
-  SerialUSB.print(dataSpin, DEC),SerialUSB.println(rawData2, HEX);
+  SerialUSB.print(decVal_1,8),SerialUSB.print("   "),SerialUSB.print(decVal_2,8),SerialUSB.print("   "),SerialUSB.println(dataSpin, DEC);
   delay(dTime);
 }
 /*------------------------------------------------*/
@@ -329,11 +304,11 @@ void readTemp() {
   float a = readData1(false,1000,false); //read adc in mV
   SerialUSB.print("Temperature: ");
   if (a < 129){
-//    SerialUSB.print(a,DEC),SerialUSB.print("  ");
+    SerialUSB.print(a,DEC),SerialUSB.print("  ");
     SerialUSB.print((-1*(129.00-a)*0.403)+25), SerialUSB.println(" degrees C");
   }
   else {
-//    SerialUSB.print(a,DEC),SerialUSB.print("  ");
+    SerialUSB.print(a,DEC),SerialUSB.print("  ");
     SerialUSB.print(((129.00-a)*0.403)+25), SerialUSB.println(" degrees C");
   }
   writeReg(0x49, 0x10); //disable internal temp monitor
@@ -601,7 +576,7 @@ void resetADC() {
 }
 void printTimeStamp() {
   //TODO: don't use millis
-  SerialUSB.print(micros(),4);
+  SerialUSB.print("0.000");
 }
 /*Read 24 bit data from ADC --- WORKING ---*/
 float readData1(bool showHex, int scalar, bool printData) { //read the ADC data when STATUS and CRC bits are NOT enabled
