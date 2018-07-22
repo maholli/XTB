@@ -10,8 +10,7 @@ bool startUP = false;
 bool resetMe= false;
 byte address, thisValue, address2, address3 = 0;
 byte readOut0, readOut1, readOut2, readOut3, readOut4, readOut5, readOut6, readOut7, readOut8, readOut9, readOut10, readOut11, readOut12, readOut13, readOut14, readOut15, readOut16, readOut17 = 0;
-byte inByte1, inByte2, inByte3 = 0;
-
+byte inByte1, inByte2, inByte3, inByte4, inByte5, inByte6 = 0;
 
 
 /*------------------------------------------------*/
@@ -40,7 +39,7 @@ void setup() {
   pinMode(resetPin,OUTPUT);
   pinMode(chipSelectPin,OUTPUT); 
   pinMode(startSync,OUTPUT); 
-  digitalWrite(startSync, HIGH);
+  digitalWrite(startSync, LOW);
   digitalWrite(resetPin, HIGH);
   delayMicroseconds(1);
   delay(500);
@@ -50,8 +49,7 @@ void setup() {
   /* inital startup routine (including reset)*/ 
   delay(100);
   resetADC();
-
-   
+  
 }
 
 
@@ -63,14 +61,19 @@ void loop() {
   if (SerialUSB.available() > 0) {
     handleCommand();
   }
-  if (!current_spinning_mode) {
-    if (active) {
-      readData1(showHex = false, 1000, true);
-    }
-    delay(75);
-  } else {
-    hallSpin(200,0);
+
+  if (active) {
+    hallSpin(10);
   }
+  
+//  if (active) {
+//    if (current_spinning_mode) {
+//        hallSpin(25);      
+//    } else {
+//      readData1(showHex = false, 1000, true);
+//      delay(75);
+//    }
+//  }
 }
 /*------------------------------------------------*/
 /*------------------------------------------------*/
@@ -79,7 +82,7 @@ void loop() {
 
 
 
-void hallSpin(int dTime, int hallDebug) {
+void hallSpin(int dTime) {
 //  N
 //W + E
 //  S
@@ -87,57 +90,108 @@ void hallSpin(int dTime, int hallDebug) {
   /* HALL SPIN -- phase 1 --*/
 //  float tPhaseTot = micros();
 //  float tPhase1 = micros();
-  float rDataA = 0;
-  setInputMUX(cs_pin_N, cs_pin_S);
-  delay(20);  
-  writeReg(0x48, 0x02);
-//  hallVbias(cs_pin_E); //3.3/2V
-  delay(20);
-  setIDAC(-1, cs_pin_W, 100);
-  delay(20);
-  rDataA = readData1(showHex = false, 1, false);
-//  tPhase1 = micros()-tPhase1;
-  
   delay(dTime);
+  float rDataA = 0;
+  float decVal_1 = 0;
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x13);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x1C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x03);   //0x46  IDACMAG
+  SPI.transfer(0xF2);   //0x47  IDACMUX
+  SPI.transfer(0x81);   //0x48  VBIAS
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  SPI.transfer(0x25);   //RREG trick to force DRDY high
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH); 
+  delay(5);
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1); 
+  if (digitalRead(12)==0){
+    SPI.transfer(0x12); //transfer read command  
+    inByte1 = SPI.transfer(0x00);
+    inByte2 = SPI.transfer(0x00);
+    inByte3 = SPI.transfer(0x00);
+    SPI.transfer(0x00);
+    SPI.transfer(0x25);   //RREG trick to force DRDY high
+    delay(1);
+    digitalWrite(chipSelectPin, HIGH);
+  }
+  else{
+    SerialUSB.println("conversion error");
+    delay(1);
+    digitalWrite(chipSelectPin, HIGH);
+  }
+  /* convert data from phase 1 --*/
+  int rawData1 = 0; //create an empty 24 bit integer for the data
+  rawData1 |= inByte1; //shift the data in one byte at a time
+  rawData1 = (rawData1 << 8) | inByte2;
+  rawData1 = (rawData1 << 8) | inByte3;
+  if (((1 << 23) & rawData1) != 0){ //If the rawData has bit 24 on, then it's a negative value
+    int mask = (1 << 24) - 1;
+    rawData1 = ((~rawData1) & mask) + 1;
+    decVal_1 = rawData1 * LSBsize * -1;}
+  else{ //if it's not negative
+    decVal_1 = float(rawData1)*LSBsize;} //then just multiply by LSBsize
+  delay(50);
   
   /* HALL SPIN -- phase 2 --*/
-//  float tPhase2 = micros(); 
-  float rDataB = 0;
-  setInputMUX(cs_pin_E, cs_pin_W);
-  delay(20);
-  writeReg(0x48, 0x01);
-//  hallVbias(cs_pin_S); //3.3/2V
-  delay(20);
-  setIDAC(-1, cs_pin_N, 100);
-  delay(20);
-  rDataB = readData1(showHex = false, 1, false);
-//  tPhase2 = micros()-tPhase2;
-  if (active){
-    if (hallDebug == 0){
-      float dataSpin = (rDataA-rDataB)*1;
-      printTimeStamp();
-      SerialUSB.print(",");
-      SerialUSB.println(dataSpin, DEC);
-    }    
-    else if (hallDebug == 1) {        
-      float dataSpin = (rDataA-rDataB)*1;
-      printTimeStamp();
-      SerialUSB.print(",");
-      SerialUSB.print(dataSpin, DEC);
-      SerialUSB.print(",");
-//      SerialUSB.print(" Phase 1 (us): ");
-//      SerialUSB.print(tPhase1, 4);
-//      SerialUSB.print(",");
-//      SerialUSB.print(" Phase 2 (us): ");
-//      SerialUSB.print(tPhase2, 4);
-//      tPhaseTot = micros()-tPhaseTot;   
-//      SerialUSB.print(",");
-//      SerialUSB.print(" Total Time (sec): ");
-//      SerialUSB.print(tPhaseTot*0.000001,4);
-//      SerialUSB.print("Switching Freq (Hz): ");
-//      SerialUSB.println(1/(tPhaseTot*0.000001),4);
-    }
+  float decVal_2 = 0;
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);   
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x02);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x1C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x03);   //0x46  IDACMAG
+  SPI.transfer(0xF3);   //0x47  IDACMUX
+  SPI.transfer(0x82);   //0x48  VBIAS
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  SPI.transfer(0x25);   //RREG trick to force DRDY high
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH); 
+  delay(5);
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1); 
+  if (digitalRead(12)==0){
+    SPI.transfer(0x12); //transfer read command  
+    inByte1 = SPI.transfer(0x00);
+    inByte2 = SPI.transfer(0x00);
+    inByte3 = SPI.transfer(0x00);
+    SPI.transfer(0x00);
+    SPI.transfer(0x25);   //RREG trick to force DRDY high
+    delay(1);
+    digitalWrite(chipSelectPin, HIGH);
   }
+  else{
+    SerialUSB.println("conversion error");
+    delay(1);
+    digitalWrite(chipSelectPin, HIGH);
+  }
+  /* convert data from phase 2 --*/
+  int rawData2 = 0; //create an empty 24 bit integer for the data
+  rawData2 |= inByte4; //shift the data in one byte at a time
+  rawData2 = (rawData2 << 8) | inByte5;
+  rawData2 = (rawData2 << 8) | inByte6;
+  if (((1 << 23) & rawData2) != 0){ //If the rawData has bit 24 on, then it's a negative value
+    int mask = (1 << 24) - 1;
+    rawData2 = ((~rawData2) & mask) + 1;
+    decVal_2 = rawData2 * LSBsize * -1;}
+  else{ //if it's not negative
+    decVal_2 = float(rawData2)*LSBsize;} //then just multiply by LSBsize
+  float dataSpin = (decVal_1-decVal_2)*1000; //output in mV
+  printTimeStamp();
+  SerialUSB.print(",");
+  SerialUSB.print(dataSpin, DEC),SerialUSB.println(rawData2, HEX);
+  delay(dTime);
 }
 /*------------------------------------------------*/
 
@@ -231,9 +285,9 @@ void handleCommand() {
     setVbiasPins(argv[1].toInt(), argv[2].toInt(), argv[3].toInt(), argv[4].toInt(), argv[5].toInt(), argv[6].toInt());
   } else if (argv[0] == "setreadmode") {
     if (argv[1] == "currentspin") {
-      current_spinning_mode = false;
-    } else {
       current_spinning_mode = true;
+    } else {
+      current_spinning_mode = false;
     }
   } else if (argv[0] == "setcspins") {
     cs_pin_N = argv[1].toInt();
@@ -244,8 +298,6 @@ void handleCommand() {
     sysTest();
   } else if (argv[0] == "readtemp") {
     readTemp();
-  } else if (argv[0] == "writereg") {
-    writeReg(argv[1].toInt(), argv[2].toInt());
   }
 }
 
@@ -457,11 +509,13 @@ void hallVbias(int pin) {
 void startADC() {
   //SerialUSB.println("---Starting ADC---");
   digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x0A); //send stop byte
   SPI.transfer(0x08); //send start byte
-  digitalWrite(startSync, LOW);
-  delay(4*1/10000000);
-  digitalWrite(startSync, HIGH);
-  delay(20);
+//  digitalWrite(startSync, LOW);
+//  delay(4*1/10000000);
+//  digitalWrite(startSync, HIGH);
+  delay(1);
   digitalWrite(chipSelectPin, HIGH);
   active = true;
 }
@@ -470,9 +524,10 @@ void startADC() {
 void stopADC() {
   //SerialUSB.println("---Stopping ADC---");
   digitalWrite(chipSelectPin, LOW);
-  SPI.transfer(0x0A); //send start byte
-  digitalWrite(startSync, LOW);
-  delay(20);
+  delayMicroseconds(1);
+  SPI.transfer(0x0A); //send stop byte
+//  digitalWrite(startSync, LOW);
+  delay(1);
   digitalWrite(chipSelectPin, HIGH);
   active = false;
 }
@@ -481,6 +536,7 @@ void stopADC() {
 void IDAC(bool setIDAC, byte valIDAC, byte pinIDAC){
   if(setIDAC == 1){
     digitalWrite(chipSelectPin, LOW);
+    delayMicroseconds(1);
     SPI.transfer(0x46);   //Send register START location
     SPI.transfer(0x01);   //how many registers to write to
     SPI.transfer(valIDAC);   //set 0x46 register to ENABLE @ 100uA
@@ -491,6 +547,7 @@ void IDAC(bool setIDAC, byte valIDAC, byte pinIDAC){
     }
   else{
     digitalWrite(chipSelectPin, LOW);
+    delayMicroseconds(1);
     SPI.transfer(0x46);   //Send register START location
     SPI.transfer(0x01);   //how many registers to write to
     SPI.transfer(0x00);   //set 0x46 register to DISABLE
@@ -507,20 +564,32 @@ void IDAC(bool setIDAC, byte valIDAC, byte pinIDAC){
 void resetADC() {
   //SerialUSB.println("---Resetting ADC---");
   digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
   SPI.transfer(0x06); //send reset byte
   digitalWrite(resetPin, LOW);
-  delay(4*1/10000000);
+  delayMicroseconds(1);
   digitalWrite(resetPin, HIGH);
-  delay(4096*1/10000000);
-  digitalWrite(chipSelectPin, HIGH); 
-  /* register configuration - use excel calculator!*/
-  delay(1000);
-  digitalWrite(chipSelectPin, LOW);
+//  delayMicroseconds(1);
+//  digitalWrite(chipSelectPin, HIGH); 
+//  /* register configuration - use excel calculator!*/
+//  delay(1000);
+//  digitalWrite(chipSelectPin, LOW);
+  delay(1);
+//  SPI.transfer(0x42);   //Send register START location
+//  SPI.transfer(0x07);   //how many registers to write to
+//  SPI.transfer(0x02);   //0x42  INPMUX 
+//  SPI.transfer(0x08);   //0x43  PGA
+//  SPI.transfer(0x17);   //0x44  DATARATE
+//  SPI.transfer(0x39);   //0x45  REF
+//  SPI.transfer(0x03);   //0x46  IDACMAG
+//  SPI.transfer(0xF3);   //0x47  IDACMUX
+//  SPI.transfer(0x82);   //0x48  VBIAS
+//  SPI.transfer(0x10);   //0x49  SYS
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x07);   //how many registers to write to
   SPI.transfer(0xCC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x17);   //0x44  DATARATE
+  SPI.transfer(0x1D);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x00);   //0x46  IDACMAG
   SPI.transfer(0xFF);   //0x47  IDACMUX
@@ -532,14 +601,16 @@ void resetADC() {
 }
 void printTimeStamp() {
   //TODO: don't use millis
-  SerialUSB.print("0.00000");
+  SerialUSB.print(micros(),4);
 }
 /*Read 24 bit data from ADC --- WORKING ---*/
 float readData1(bool showHex, int scalar, bool printData) { //read the ADC data when STATUS and CRC bits are NOT enabled
 //  SerialUSB.print("Data Read: ");
+  int result;
   float decVal = 0;
   /*Read the three bytes of 2's complement data from the ADC*/ 
-  digitalWrite(chipSelectPin, LOW);  
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);  
   SPI.transfer(0x12); //transfer read command  
   inByte1 = SPI.transfer(0x00);
   inByte2 = SPI.transfer(0x00);
@@ -560,7 +631,11 @@ float readData1(bool showHex, int scalar, bool printData) { //read the ADC data 
   rawData = (rawData << 8) | inByte3;
   
   if (((1 << 23) & rawData) != 0){ //If the rawData has bit 24 on, then it's a negative value
-    decVal = float(rawData-(1 << 23))*-1*LSBsize*scalar; //if it's negative, then subtract 2^23 from it and multiple by LSB   
+    int mask = (1 << 24) - 1;
+    rawData = ((~rawData) & mask) + 1;
+    decVal = rawData * scalar * LSBsize * -1;
+
+//    decVal = float(rawData-(1 << 23))*-1*LSBsize*scalar; //if it's negative, then subtract 2^23 from it and multiple by LSB   
   }
   else{ //if it's not negative
     decVal = float(rawData)*LSBsize*scalar; //then just multiply by LSBsize
@@ -577,6 +652,7 @@ float readData1(bool showHex, int scalar, bool printData) { //read the ADC data 
 /*Write register value --- WORKING ---*/
 void writeReg(byte address, byte thisValue) {
   digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
   SPI.transfer(address); //Send register location
   SPI.transfer(0x00);
   SPI.transfer(thisValue);  //Send value to write 
@@ -594,6 +670,7 @@ void readReg(byte address2) {
   SerialUSB.print(address2, HEX);
   SerialUSB.print("\t");
   digitalWrite(chipSelectPin, LOW); 
+  delayMicroseconds(1);
   SPI.transfer(address2);
   inByte = SPI.transfer(0x00);
   result = SPI.transfer(0x00);
@@ -610,6 +687,7 @@ void readReg(byte address2) {
 void regReadout(){
   SerialUSB.println("------Register Readout-------");
   digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
   SPI.transfer(0x20);   //Send register START location
   SPI.transfer(0x12);   //how many registers we want to read (0x12 = all 18)
   readOut0 = SPI.transfer(0x00);
@@ -657,6 +735,7 @@ void regReadout(){
 void SFOCAL() {
 //  SerialUSB.println("Self Calibration");
   digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
   SPI.transfer(0x19); //send self offset command
   delay(1);
   digitalWrite(chipSelectPin, HIGH);
