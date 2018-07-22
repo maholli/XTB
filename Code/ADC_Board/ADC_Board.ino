@@ -40,34 +40,18 @@ void setup() {
   pinMode(resetPin,OUTPUT);
   pinMode(chipSelectPin,OUTPUT); 
   pinMode(startSync,OUTPUT); 
-  //pinMode(DRDY, INPUT); 
   digitalWrite(startSync, HIGH);
   digitalWrite(resetPin, HIGH);
   delayMicroseconds(1);
   delay(500);
   SPI.begin();
-  SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE1));
+  SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE1));
   
   /* inital startup routine (including reset)*/ 
   delay(100);
   resetADC();
-  delay(1000); 
 
-  /* register configuration - use excel calculator!*/
-  digitalWrite(chipSelectPin, LOW);
-  SPI.transfer(0x42);   //Send register START location
-  SPI.transfer(0x07);   //how many registers to write to
-  SPI.transfer(0xCC);   //0x42  INPMUX 
-  SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x17);   //0x44  DATARATE
-  SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x00);   //0x46  IDACMAG
-  SPI.transfer(0xFF);   //0x47  IDACMUX
-  SPI.transfer(0x00);   //0x48  VBIAS
-  SPI.transfer(0x10);   //0x49  SYS
-  delay(1);
-  digitalWrite(chipSelectPin, HIGH);
-  delay(3000);  
+   
 }
 
 
@@ -85,7 +69,7 @@ void loop() {
     }
     delay(75);
   } else {
-    hallSpin(50,0);
+    hallSpin(200,0);
   }
 }
 /*------------------------------------------------*/
@@ -101,48 +85,58 @@ void hallSpin(int dTime, int hallDebug) {
 //  S
 
   /* HALL SPIN -- phase 1 --*/
-  float tPhaseTot = micros();
-  float tPhase1 = micros();
+//  float tPhaseTot = micros();
+//  float tPhase1 = micros();
   float rDataA = 0;
   setInputMUX(cs_pin_N, cs_pin_S);
-  delay(5);  
-  hallVbias(cs_pin_E); //0.0275V
-  delay(5);
+  delay(20);  
+  writeReg(0x48, 0x02);
+//  hallVbias(cs_pin_E); //3.3/2V
+  delay(20);
   setIDAC(-1, cs_pin_W, 100);
-  delay(5);
-  rDataA = readData1(showHex = false, 1, false) - 0.0275;
-  tPhase1 = micros()-tPhase1;
+  delay(20);
+  rDataA = readData1(showHex = false, 1, false);
+//  tPhase1 = micros()-tPhase1;
   
   delay(dTime);
   
   /* HALL SPIN -- phase 2 --*/
-  float tPhase2 = micros(); 
+//  float tPhase2 = micros(); 
   float rDataB = 0;
-  setInputMUX(cs_pin_W, cs_pin_E);
-  delay(5);
-  hallVbias(cs_pin_S); //0.0275V
-  delay(5);
+  setInputMUX(cs_pin_E, cs_pin_W);
+  delay(20);
+  writeReg(0x48, 0x01);
+//  hallVbias(cs_pin_S); //3.3/2V
+  delay(20);
   setIDAC(-1, cs_pin_N, 100);
-  delay(5);
-  rDataB = readData1(showHex = false, 1, false) - 0.0275;
-  tPhase2 = micros()-tPhase2;
-  if (hallDebug == 1){    
-    float dataSpin = (rDataA-rDataB)*1;
-    printTimeStamp();
-    SerialUSB.print(",");
-    SerialUSB.print(dataSpin, DEC);
-    SerialUSB.print(",");
-    SerialUSB.print(" Phase 1 (us): ");
-    SerialUSB.print(tPhase1, 4);
-    SerialUSB.print(",");
-    SerialUSB.print(" Phase 2 (us): ");
-    SerialUSB.print(tPhase2, 4);
-    tPhaseTot = micros()-tPhaseTot;   
-    SerialUSB.print(",");
-    SerialUSB.print(" Total Time (sec): ");
-    SerialUSB.print(tPhaseTot*0.000001,4);
-    SerialUSB.print("Switching Freq (Hz): ");
-    SerialUSB.println(1/(tPhaseTot*0.000001),4);
+  delay(20);
+  rDataB = readData1(showHex = false, 1, false);
+//  tPhase2 = micros()-tPhase2;
+  if (active){
+    if (hallDebug == 0){
+      float dataSpin = (rDataA-rDataB)*1;
+      printTimeStamp();
+      SerialUSB.print(",");
+      SerialUSB.println(dataSpin, DEC);
+    }    
+    else if (hallDebug == 1) {        
+      float dataSpin = (rDataA-rDataB)*1;
+      printTimeStamp();
+      SerialUSB.print(",");
+      SerialUSB.print(dataSpin, DEC);
+      SerialUSB.print(",");
+//      SerialUSB.print(" Phase 1 (us): ");
+//      SerialUSB.print(tPhase1, 4);
+//      SerialUSB.print(",");
+//      SerialUSB.print(" Phase 2 (us): ");
+//      SerialUSB.print(tPhase2, 4);
+//      tPhaseTot = micros()-tPhaseTot;   
+//      SerialUSB.print(",");
+//      SerialUSB.print(" Total Time (sec): ");
+//      SerialUSB.print(tPhaseTot*0.000001,4);
+//      SerialUSB.print("Switching Freq (Hz): ");
+//      SerialUSB.println(1/(tPhaseTot*0.000001),4);
+    }
   }
 }
 /*------------------------------------------------*/
@@ -250,15 +244,17 @@ void handleCommand() {
     sysTest();
   } else if (argv[0] == "readtemp") {
     readTemp();
+  } else if (argv[0] == "writereg") {
+    writeReg(argv[1].toInt(), argv[2].toInt());
   }
 }
 
 
 void sysTest(){
   SerialUSB.println("");
-  delay(5); 
+  delay(20); 
   setInputMUX(5,6);
-  delay(5);  
+  delay(20);  
   writeReg(0x49, 0x30); //inputs shorted to mid-supply
   delay(50);  
   if (active) {
@@ -268,16 +264,16 @@ void sysTest(){
     }
   }
   writeReg(0x49, 0x10);
-  delay(5); 
+  delay(20); 
   setInputMUX(12,12);
-  delay(5);
+  delay(20);
   SerialUSB.println("");
 }
 
 void readTemp() {
-  delay(5);
-  writeReg(0x49, 0x50); //enable internal temp monitor
   delay(20);
+  writeReg(0x49, 0x50); //enable internal temp monitor
+  delay(100);
   float a = readData1(false,1000,false); //read adc in mV
   SerialUSB.print("Temperature: ");
   if (a < 129){
@@ -289,7 +285,7 @@ void readTemp() {
     SerialUSB.print(((129.00-a)*0.403)+25), SerialUSB.println(" degrees C");
   }
   writeReg(0x49, 0x10); //disable internal temp monitor
-  delay(75);  
+  delay(50);  
 }
 
 void parseMessage(String msg, String arg[]) {
@@ -453,7 +449,7 @@ void setInputMUX(int AINx, int AINy) {
 }
 
 void hallVbias(int pin) {
-  byte val = (1 << pin)|0x80;
+  byte val = (1 << pin);
   writeReg(0x48, val);
 }
 
@@ -517,6 +513,22 @@ void resetADC() {
   digitalWrite(resetPin, HIGH);
   delay(4096*1/10000000);
   digitalWrite(chipSelectPin, HIGH); 
+  /* register configuration - use excel calculator!*/
+  delay(1000);
+  digitalWrite(chipSelectPin, LOW);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x07);   //how many registers to write to
+  SPI.transfer(0xCC);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x17);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x00);   //0x46  IDACMAG
+  SPI.transfer(0xFF);   //0x47  IDACMUX
+  SPI.transfer(0x00);   //0x48  VBIAS
+  SPI.transfer(0x10);   //0x49  SYS
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  delay(3000); 
 }
 void printTimeStamp() {
   //TODO: don't use millis
