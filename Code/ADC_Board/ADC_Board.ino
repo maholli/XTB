@@ -1,9 +1,36 @@
-//XTB-20 board configured for a mini breakout (samd21)
+/*
+
+  XTB-20 board configured for a mini breakout (samd21)
+  Pinout designed for custom flat cable:
+  --------------------------
+   Mini Breakout |  XTB  |
+  --------------------------
+        GND      |  GND   |  
+        AREF     |        | 
+        3V3      |  3V3   |  
+        A3       |        |       
+        A2       |  RST   |  
+        A1       |  CS    | 
+        A0       |  START |  
+        13       |  SCK   | 
+        12       |  MISO  | 
+        11       |  MOSI  | 
+                 |  GND   |
+  --------------------------
+
+  Operating instructions at:
+  https://github.com/maholli/xtb
+  Max Holliday & Connor Settle - July 2018
+
+
+  https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
+  https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+*/
 
 #include <SPI.h>
-#define chipSelectPin 3
-#define startSync 9
-#define resetPin 8
+#define chipSelectPin A1
+#define startSync A0
+#define resetPin A2
 
 bool PGAen = false;
 bool startUP = false;
@@ -49,7 +76,6 @@ void setup() {
   /* inital startup routine (including reset)*/ 
   delay(100);
   resetADC();
-  
 }
 
 
