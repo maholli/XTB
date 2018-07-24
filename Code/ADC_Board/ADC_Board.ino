@@ -25,6 +25,9 @@
 
   https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
   https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+
+  Operate via GUI using PythonGUI.py
+  Dump data to text file using serialSave.py
 */
 
 #include <SPI.h>
@@ -39,6 +42,7 @@ byte address, thisValue, address2, address3 = 0;
 byte readOut0, readOut1, readOut2, readOut3, readOut4, readOut5, readOut6, readOut7, readOut8, readOut9, readOut10, readOut11, readOut12, readOut13, readOut14, readOut15, readOut16, readOut17 = 0;
 float lastTemp =0;
 int cnt = 0;
+
 
 
 /*------------------------------------------------*/
@@ -92,9 +96,11 @@ void loop() {
   }
 
   if (active) {
-//    hallSpin(10);
-      readData1(showHex = false, 1000, true);
-      delay(75);
+      float nn = mosfetV(0x04);
+      delay(10);
+      float pp = mosfetV(0x05);
+      Serial.print(micros()),Serial.print(","),Serial.print(nn,4),Serial.print(","),Serial.println(pp,4);
+      delay(50);
   }
   
 //  if (active) {
@@ -312,7 +318,36 @@ float dataConvert( byte a, byte b, byte c){
   return dataOUT;
 }
 
+float mosfetV(byte pinNum){
+  byte mosDat1, mosDat2, mosDat3 = 0;
+  byte IDACpin = pinNum | 0xF0;
+  pinNum |= 0xC0;
 
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);   
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(pinNum); //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x9D);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x04);   //0x46  IDACMAG
+  SPI.transfer(IDACpin);//0x47  IDACMUX
+  SPI.transfer(0x00);   //0x48  VBIAS
+  SPI.transfer(0x19);   //system calibration
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  delay(5);
+  SPI.transfer(0x00);   //NOP to get rid of junk?
+  SPI.transfer(0x12); //transfer read command  
+  mosDat1 = SPI.transfer(0x00);
+  mosDat2 = SPI.transfer(0x00);
+  mosDat3 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  float mosData = -1*dataConvert(mosDat1,mosDat2,mosDat3);
+  return mosData;
+}
 
 void sysTest(){
   Serial.println("");
@@ -625,15 +660,18 @@ void resetADC() {
   delay(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x07);   //how many registers to write to
-  SPI.transfer(0x4C);   //0x42  INPMUX 
+  SPI.transfer(0xCC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
   SPI.transfer(0x1D);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x04);   //0x46  IDACMAG
-  SPI.transfer(0xF4);   //0x47  IDACMUX
+  SPI.transfer(0x00);   //0x46  IDACMAG
+  SPI.transfer(0xFF);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
   SPI.transfer(0x10);   //0x49  SYS
-  delay(1);
+  SPI.transfer(0x19);   //system calibration
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  delay(20);
   digitalWrite(chipSelectPin, HIGH);
   delay(1000); 
 }
