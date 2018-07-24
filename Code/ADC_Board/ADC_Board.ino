@@ -38,6 +38,7 @@ bool resetMe= false;
 byte address, thisValue, address2, address3 = 0;
 byte readOut0, readOut1, readOut2, readOut3, readOut4, readOut5, readOut6, readOut7, readOut8, readOut9, readOut10, readOut11, readOut12, readOut13, readOut14, readOut15, readOut16, readOut17 = 0;
 float lastTemp =0;
+int cnt = 0;
 
 
 /*------------------------------------------------*/
@@ -76,6 +77,8 @@ void setup() {
   /* inital startup routine (including reset)*/ 
   delay(100);
   resetADC();
+  delay(10);
+  lastTemp = readTemp();
 }
 
 
@@ -119,8 +122,8 @@ void hallSpin(int dTime) {
   float decVal_A = 0;
   delay(dTime);
   
-  if (startUP){
-    readTemp();
+  if (cnt % 100 == 0){
+    lastTemp = readTemp();
   }
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);
@@ -180,7 +183,8 @@ void hallSpin(int dTime) {
   float dataSpin = ((decVal_A+decVal_B)/2)*1000; //output in mV
   printTimeStamp();
   Serial.print(",");
-  Serial.print(decVal_A,8),Serial.print("   "),Serial.print(decVal_B,8),Serial.print("   "),Serial.println(dataSpin, DEC);
+  Serial.print(decVal_A,8),Serial.print(","),Serial.print(decVal_B,8),Serial.print(","),Serial.print(dataSpin, DEC),Serial.print(","),Serial.println(lastTemp,2);
+  cnt++; 
   delay(dTime);
 }
 /*------------------------------------------------*/
@@ -329,7 +333,7 @@ void sysTest(){
 }
 
 
-void readTemp() {
+float readTemp() {
   byte aa, bb, cc = 0;
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);   
@@ -356,18 +360,19 @@ void readTemp() {
   digitalWrite(chipSelectPin, HIGH);
   
   float temp = dataConvert(aa, bb, cc)*1000.0;
- 
-  Serial.print("Temperature: ");
+  float dd = 0;
+//  Serial.print("Temperature: ");
   if (temp < 129){
 //    Serial.print(temp,DEC),Serial.print("  ");
-    Serial.print((-1*(129.00-temp)*0.403)+25), Serial.println(" degrees C");
+    dd = ((-1*(129.00-temp)*0.403)+25);
+//    Serial.print(dd, DEC), Serial.println(" degrees C");
   }
   else {
 //    Serial.print(temp,DEC),Serial.print("  ");
-    Serial.print(((129.00-temp)*0.403)+25), Serial.println(" degrees C");
+    dd = (((129.00-temp)*0.403)+25);
+//    Serial.print(dd, DEC), Serial.println(" degrees C");
   }
-  delay(1);
-  
+  delay(1);  
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);   
   SPI.transfer(0x42);   //Send register START location
@@ -382,27 +387,10 @@ void readTemp() {
   SPI.transfer(0x00);   //0x49  SYS
   delay(1);
   digitalWrite(chipSelectPin, HIGH);
+  delay(1);
+  return dd;
 }
 
-
-
-//void readTemp() {
-//  delay(20);
-//  writeReg(0x49, 0x50); //enable internal temp monitor
-//  delay(100);
-//  float a = readData1(false,1000,false); //read adc in mV
-//  Serial.print("Temperature: ");
-//  if (a < 129){
-//    Serial.print(a,DEC),Serial.print("  ");
-//    Serial.print((-1*(129.00-a)*0.403)+25), Serial.println(" degrees C");
-//  }
-//  else {
-//    Serial.print(a,DEC),Serial.print("  ");
-//    Serial.print(((129.00-a)*0.403)+25), Serial.println(" degrees C");
-//  }
-//  writeReg(0x49, 0x10); //disable internal temp monitor
-//  delay(50);  
-//}
 
 void parseMessage(String msg, String arg[]) {
   int index = 0;
