@@ -37,7 +37,7 @@ bool startUP = false;
 bool resetMe= false;
 byte address, thisValue, address2, address3 = 0;
 byte readOut0, readOut1, readOut2, readOut3, readOut4, readOut5, readOut6, readOut7, readOut8, readOut9, readOut10, readOut11, readOut12, readOut13, readOut14, readOut15, readOut16, readOut17 = 0;
-
+float lastTemp =0;
 
 
 /*------------------------------------------------*/
@@ -112,13 +112,16 @@ void hallSpin(int dTime) {
 //  N
 //W + E
 //  S
-
   /* HALL SPIN -- phase 1 --*/
 //  float tPhaseTot = micros();
 //  float tPhase1 = micros();
   byte inByteA, inByteB, inByteC, inByteD, inByteE, inByteF = 0;
-  delay(dTime);
   float decVal_A = 0;
+  delay(dTime);
+  
+  if (startUP){
+    readTemp();
+  }
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);
   SPI.transfer(0x42);   //Send register START location
@@ -133,7 +136,7 @@ void hallSpin(int dTime) {
   SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  delay(8);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
@@ -144,7 +147,7 @@ void hallSpin(int dTime) {
 
   /* convert data from phase 1 --*/
   decVal_A = dataConvert(inByteA,inByteB,inByteC);
-  delay(8);
+  delay(5);
   
   /* HALL SPIN -- phase 2 --*/
   float decVal_B = 0;
@@ -162,8 +165,8 @@ void hallSpin(int dTime) {
   SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  delay(8);
-  SPI.transfer(0x00);
+  delay(5);
+  SPI.transfer(0x00);   //NOP to get rid of junk?
   SPI.transfer(0x12); //transfer read command  
   inByteD = SPI.transfer(0x00);
   inByteE = SPI.transfer(0x00);
