@@ -92,7 +92,9 @@ void loop() {
   }
 
   if (active) {
-    hallSpin(10);
+//    hallSpin(10);
+      readData1(showHex = false, 1000, true);
+      delay(75);
   }
   
 //  if (active) {
@@ -357,20 +359,19 @@ float readTemp() {
   bb = SPI.transfer(0x00);
   cc = SPI.transfer(0x00);
   delay(1);
-  digitalWrite(chipSelectPin, HIGH);
-  
+  digitalWrite(chipSelectPin, HIGH);  
   float temp = dataConvert(aa, bb, cc)*1000.0;
   float dd = 0;
-//  Serial.print("Temperature: ");
+  Serial.print("Temperature: ");
   if (temp < 129){
 //    Serial.print(temp,DEC),Serial.print("  ");
     dd = ((-1*(129.00-temp)*0.403)+25);
-//    Serial.print(dd, DEC), Serial.println(" degrees C");
+    Serial.print(dd, 2), Serial.println(" degrees C");
   }
   else {
 //    Serial.print(temp,DEC),Serial.print("  ");
     dd = (((129.00-temp)*0.403)+25);
-//    Serial.print(dd, DEC), Serial.println(" degrees C");
+    Serial.print(dd, 2), Serial.println(" degrees C");
   }
   delay(1);  
   digitalWrite(chipSelectPin, LOW);
@@ -624,12 +625,12 @@ void resetADC() {
   delay(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x07);   //how many registers to write to
-  SPI.transfer(0xCC);   //0x42  INPMUX 
+  SPI.transfer(0x4C);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
   SPI.transfer(0x1D);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x00);   //0x46  IDACMAG
-  SPI.transfer(0xFF);   //0x47  IDACMUX
+  SPI.transfer(0x04);   //0x46  IDACMAG
+  SPI.transfer(0xF4);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
   SPI.transfer(0x10);   //0x49  SYS
   delay(1);
