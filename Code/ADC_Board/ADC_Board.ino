@@ -34,6 +34,7 @@
 #define chipSelectPin A1
 #define startSync A0
 #define resetPin A2
+#define LEDPIN 13
 
 bool PGAen = false;
 bool startUP = false;
@@ -70,7 +71,8 @@ void setup() {
   Serial.println("Serial Connected");
   pinMode(resetPin,OUTPUT);
   pinMode(chipSelectPin,OUTPUT); 
-  pinMode(startSync,OUTPUT); 
+  pinMode(startSync,OUTPUT);
+  pinMode(LEDPIN, OUTPUT); 
   digitalWrite(startSync, LOW);
   digitalWrite(resetPin, HIGH);
   delayMicroseconds(1);
@@ -83,6 +85,7 @@ void setup() {
   resetADC();
   delay(10);
   lastTemp = readTemp();
+     
 }
 
 
@@ -94,13 +97,26 @@ void loop() {
   if (Serial.available() > 0) {
     handleCommand();
   }
-
-  if (active) {
+  
+  if (!active) {
+    if (!startUP){
+      delay(5000);
+      Serial.print("Time(us)"),Serial.print(","),
+      Serial.print(" Temperature(C)"),Serial.print(","),
+      Serial.print(" Vth(nmos)"),Serial.print(","),Serial.println(" Vth(pmos)"); 
+      startUP = true;
+    }
+      digitalWrite(LEDPIN,HIGH);
       float nn = mosfetV(0x04);
       delay(10);
       float pp = mosfetV(0x05);
-      Serial.print(micros()),Serial.print(","),Serial.print(nn,4),Serial.print(","),Serial.println(pp,4);
-      delay(50);
+      delay(5);
+      digitalWrite(LEDPIN,LOW);
+      lastTemp = readTemp();
+      Serial.print(micros()),Serial.print(","),
+      Serial.print(lastTemp,2),Serial.print(","),
+      Serial.print(nn,4),Serial.print(","),Serial.println(pp,4);
+      
   }
   
 //  if (active) {
@@ -397,16 +413,16 @@ float readTemp() {
   digitalWrite(chipSelectPin, HIGH);  
   float temp = dataConvert(aa, bb, cc)*1000.0;
   float dd = 0;
-  Serial.print("Temperature: ");
+//  Serial.print("Temperature: ");
   if (temp < 129){
 //    Serial.print(temp,DEC),Serial.print("  ");
     dd = ((-1*(129.00-temp)*0.403)+25);
-    Serial.print(dd, 2), Serial.println(" degrees C");
+//    Serial.print(dd, 2), Serial.println(" degrees C");
   }
   else {
 //    Serial.print(temp,DEC),Serial.print("  ");
     dd = (((129.00-temp)*0.403)+25);
-    Serial.print(dd, 2), Serial.println(" degrees C");
+//    Serial.print(dd, 2), Serial.println(" degrees C");
   }
   delay(1);  
   digitalWrite(chipSelectPin, LOW);
