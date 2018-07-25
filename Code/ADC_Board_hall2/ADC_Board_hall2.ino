@@ -158,7 +158,7 @@ void hallSpin2(int dTime) {
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x03);   //0x46  IDACMAG
   SPI.transfer(0xF2);   //0x47  IDACMUX
-  SPI.transfer(0x81);   //0x48  VBIAS
+  SPI.transfer(0x01);   //0x48  VBIAS
 //  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
@@ -172,7 +172,7 @@ void hallSpin2(int dTime) {
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x20);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x08);   //0x43  PGA
   delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
@@ -213,11 +213,11 @@ void hallSpin(int dTime) {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x31);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x0C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF2);   //0x47  IDACMUX
-  SPI.transfer(0x81);   //0x48  VBIAS
+  SPI.transfer(0x01);   //0x48  VBIAS
 //  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
@@ -231,7 +231,7 @@ void hallSpin(int dTime) {
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x20);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x08);   //0x43  PGA
   delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
@@ -250,11 +250,11 @@ void hallSpin(int dTime) {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x20);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x0C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF1);   //0x47  IDACMUX
-  SPI.transfer(0x88);   //0x48  VBIAS
+  SPI.transfer(0x08);   //0x48  VBIAS
 //  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
@@ -268,7 +268,7 @@ void hallSpin(int dTime) {
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x08);   //0x43  PGA
   delay(50);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
@@ -287,11 +287,11 @@ void hallSpin(int dTime) {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x02);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x0C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF3);   //0x47  IDACMUX
-  SPI.transfer(0x82);   //0x48  VBIAS
+  SPI.transfer(0x02);   //0x48  VBIAS
 //  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
@@ -305,7 +305,7 @@ void hallSpin(int dTime) {
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x08);   //0x43  PGA
   delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
@@ -324,11 +324,11 @@ void hallSpin(int dTime) {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x0C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF0);   //0x47  IDACMUX
-  SPI.transfer(0x84);   //0x48  VBIAS
+  SPI.transfer(0x04);   //0x48  VBIAS
 //  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
@@ -342,7 +342,7 @@ void hallSpin(int dTime) {
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x02);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
+  SPI.transfer(0x08);   //0x43  PGA
   delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
