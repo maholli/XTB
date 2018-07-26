@@ -102,23 +102,28 @@ void loop() {
     if (!startUP){
       delay(5000);
       Serial.print("Time(us)"),Serial.print(","),
-      Serial.print(" Temperature(C)"),Serial.print(","),
-      Serial.print(" Vth(nmos)"),Serial.print(","),Serial.println(" Vth(pmos)"); 
+//      Serial.print(" Temperature(C)"),Serial.print(","),
+      Serial.print(" Voltage(V)-Phase 1/5"),Serial.print(","),
+      Serial.print(" Voltage(V)-Phase 2/6"),Serial.print(","),
+      Serial.print(" Voltage(V)-Phase 3/7"),Serial.print(","),
+      Serial.print(" Voltage(V)-Phase 4/8"),Serial.print(","),
+      Serial.print(" Bias Voltage(mV)"),Serial.print(","),
+      Serial.println(" VHall(mV)"); 
       startUP = true;
     }
-      digitalWrite(LEDPIN,HIGH);
-      float nn = mosfetV(0x04);
-      delay(10);
-      float pp = mosfetV(0x05);
-      delay(5);
-      digitalWrite(LEDPIN,LOW);
-      lastTemp = readTemp();
-      Serial.print(micros()),Serial.print(","),
-      Serial.print(lastTemp,2),Serial.print(","),
-      Serial.print(nn,4),Serial.print(","),Serial.println(pp,4);
-      
-  }
-  
+//      digitalWrite(LEDPIN,HIGH);
+//      float nn = mosfetV(0x04);
+//      delay(10);
+//      float pp = mosfetV(0x05);
+//      delay(5);
+//      digitalWrite(LEDPIN,LOW);
+//      lastTemp = readTemp();
+//      Serial.print(micros()),Serial.print(","),
+//      Serial.print(lastTemp,2),Serial.print(","),
+//      Serial.print(nn,4),Serial.print(","),Serial.println(pp,4); 
+//  } 
+  }  
+  hallSpin(50); 
 //  if (active) {
 //    if (current_spinning_mode) {
 //        hallSpin(25);      
@@ -131,8 +136,58 @@ void loop() {
 /*------------------------------------------------*/
 /*------------------------------------------------*/
 
-
-
+void hallSpin2(int dTime) {
+//  N
+//W + E
+//  S
+  /* HALL SPIN -- phase 1 --*/
+//  float tPhaseTot = micros();
+//  float tPhase1 = micros();
+  byte inByteA, inByteB, inByteC, inByteD, inByteE, inByteF, inByteG, inByteH, inByteI, inByteJ, inByteK, inByteL, inByteM = 0;
+  byte inByteA2, inByteB2, inByteC2, inByteD2, inByteE2, inByteF2, inByteG2, inByteH2, inByteI2, inByteJ2, inByteK2, inByteL2, inByteM2 = 0;
+  float decVal_A, decVal_B, decVal_C, decVal_D = 0;
+  float decVal_A2, decVal_B2, decVal_C2, decVal_D2 = 0;
+  delay(dTime);
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x31);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x03);   //0x46  IDACMAG
+  SPI.transfer(0xF2);   //0x47  IDACMUX
+  SPI.transfer(0x81);   //0x48  VBIAS
+//  SPI.transfer(0x19);   //system calibration
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteA = SPI.transfer(0x00);
+  inByteB = SPI.transfer(0x00);
+  inByteC = SPI.transfer(0x00);
+  delay(5);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x20);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteA2 = SPI.transfer(0x00);
+  inByteB2 = SPI.transfer(0x00);
+  inByteC2 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  decVal_A = dataConvert(inByteA,inByteB,inByteC);
+  decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
+  printTimeStamp();
+  Serial.print(",");
+  Serial.print(decVal_A,DEC),Serial.print(",");;
+  Serial.println(decVal_A2,DEC);
+}
 
 
 void hallSpin(int dTime) {
@@ -142,74 +197,176 @@ void hallSpin(int dTime) {
   /* HALL SPIN -- phase 1 --*/
 //  float tPhaseTot = micros();
 //  float tPhase1 = micros();
-  byte inByteA, inByteB, inByteC, inByteD, inByteE, inByteF = 0;
-  float decVal_A = 0;
+  byte inByteA, inByteB, inByteC, inByteD, inByteE, inByteF, inByteG, inByteH, inByteI, inByteJ, inByteK, inByteL, inByteM = 0;
+  byte inByteA2, inByteB2, inByteC2, inByteD2, inByteE2, inByteF2, inByteG2, inByteH2, inByteI2, inByteJ2, inByteK2, inByteL2, inByteM2 = 0;
+  float decVal_A, decVal_B, decVal_C, decVal_D = 0;
+  float decVal_A2, decVal_B2, decVal_C2, decVal_D2 = 0;
   delay(dTime);
   
-  if (cnt % 100 == 0){
-    lastTemp = readTemp();
-  }
+//  if (cnt % 50 == 0){
+//    lastTemp = readTemp();
+//  }
+/* ------- HALL SPIN -- phase 1 ------- */
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x13);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
-  SPI.transfer(0x9D);   //0x44  DATARATE
+  SPI.transfer(0x31);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x9C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x03);   //0x46  IDACMAG
+  SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF2);   //0x47  IDACMUX
   SPI.transfer(0x81);   //0x48  VBIAS
-  SPI.transfer(0x19);   //system calibration
+//  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  delay(5);
+  delay(50);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
   inByteB = SPI.transfer(0x00);
   inByteC = SPI.transfer(0x00);
   delay(1);
-  digitalWrite(chipSelectPin, HIGH);
-
-  /* convert data from phase 1 --*/
-  decVal_A = dataConvert(inByteA,inByteB,inByteC);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x20);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
   delay(5);
-  
-  /* HALL SPIN -- phase 2 --*/
-  float decVal_B = 0;
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteA2 = SPI.transfer(0x00);
+  inByteB2 = SPI.transfer(0x00);
+  inByteC2 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  decVal_A = dataConvert(inByteA,inByteB,inByteC);
+  decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
+  delay(1);  
+  /* HALL SPIN -- phase 4 --*/
   digitalWrite(chipSelectPin, LOW);
   delayMicroseconds(1);   
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x02);   //0x42  INPMUX 
-  SPI.transfer(0xE8);   //0x43  PGA
-  SPI.transfer(0x9D);   //0x44  DATARATE
+  SPI.transfer(0x20);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x9C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x03);   //0x46  IDACMAG
+  SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF1);   //0x47  IDACMUX
   SPI.transfer(0x88);   //0x48  VBIAS
-  SPI.transfer(0x19);   //system calibration
+//  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
-  delay(5);
+  delay(50);
   SPI.transfer(0x00);   //NOP to get rid of junk?
   SPI.transfer(0x12); //transfer read command  
   inByteD = SPI.transfer(0x00);
   inByteE = SPI.transfer(0x00);
   inByteF = SPI.transfer(0x00);
+  delay(5);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x13);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  delay(50);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteD2 = SPI.transfer(0x00);
+  inByteE2 = SPI.transfer(0x00);
+  inByteF2 = SPI.transfer(0x00);
   delay(1);
   digitalWrite(chipSelectPin, HIGH);
-
   decVal_B = dataConvert(inByteD,inByteE,inByteF);
-
+  decVal_B2 = dataConvert(inByteD2,inByteE2,inByteF2);
+  delay(1);
+ /* HALL SPIN -- phase 2 --*/
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x02);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x04);   //0x46  IDACMAG
+  SPI.transfer(0xF3);   //0x47  IDACMUX
+  SPI.transfer(0x82);   //0x48  VBIAS
+//  SPI.transfer(0x19);   //system calibration
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  delay(50);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteH = SPI.transfer(0x00);
+  inByteI = SPI.transfer(0x00);
+  inByteJ = SPI.transfer(0x00);
+  delay(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x13);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteH2 = SPI.transfer(0x00);
+  inByteI2 = SPI.transfer(0x00);
+  inByteJ2 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  decVal_C = dataConvert(inByteH,inByteI,inByteJ);
+  decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
+  delay(1);
+ /* HALL SPIN -- phase 3 --*/
+  digitalWrite(chipSelectPin, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x13);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x04);   //0x46  IDACMAG
+  SPI.transfer(0xF0);   //0x47  IDACMUX
+  SPI.transfer(0x84);   //0x48  VBIAS
+//  SPI.transfer(0x19);   //system calibration
+  SPI.transfer(0x0A);   //send stop byte
+  SPI.transfer(0x08);   //send start byte
+  delay(50);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteK = SPI.transfer(0x00);
+  inByteL = SPI.transfer(0x00);
+  inByteM = SPI.transfer(0x00);
+  delay(5);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x02);   //0x42  INPMUX 
+  SPI.transfer(0xE8);   //0x43  PGA
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteK2 = SPI.transfer(0x00);
+  inByteL2 = SPI.transfer(0x00);
+  inByteM2 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(chipSelectPin, HIGH);
+  decVal_D = dataConvert(inByteK,inByteL,inByteM);
+  decVal_D2 = dataConvert(inByteK2,inByteL2,inByteM2);
+      
+  float dataSpin = ((decVal_A+decVal_C+decVal_D+decVal_B)/4)*1000; //output in mV
+  float vApplied = ((abs(decVal_A2)+abs(decVal_C2)+abs(decVal_D2)+abs(decVal_B2))/4)*1000; //output in mV
   
-  float dataSpin = ((decVal_A+decVal_B)/2)*1000; //output in mV
   printTimeStamp();
   Serial.print(",");
-  Serial.print(decVal_A,8),Serial.print(","),Serial.print(decVal_B,8),Serial.print(","),Serial.print(dataSpin, DEC),Serial.print(","),Serial.println(lastTemp,2);
+//  Serial.print(lastTemp,2), Serial.print(","),
+  Serial.print(decVal_A,8),Serial.print(","),
+  Serial.print(decVal_B,8),Serial.print(","),
+  Serial.print(decVal_C,8),Serial.print(","),
+  Serial.print(decVal_D,8),Serial.print(","),
+  Serial.print(vApplied,8),Serial.print(","),
+  Serial.println(dataSpin, DEC);
   cnt++; 
-  delay(dTime);
 }
 /*------------------------------------------------*/
 
@@ -350,7 +507,7 @@ float mosfetV(byte pinNum){
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(IDACpin);//0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
-  SPI.transfer(0x19);   //system calibration
+//  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
   delay(5);
@@ -684,7 +841,7 @@ void resetADC() {
   SPI.transfer(0xFF);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
   SPI.transfer(0x10);   //0x49  SYS
-  SPI.transfer(0x19);   //system calibration
+//  SPI.transfer(0x19);   //system calibration
   SPI.transfer(0x0A);   //send stop byte
   SPI.transfer(0x08);   //send start byte
   delay(20);

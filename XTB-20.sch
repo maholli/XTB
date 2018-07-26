@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.0.1">
+<eagle version="9.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1129,6 +1129,12 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <plain>
 <text x="33.02" y="152.4" size="3.81" layer="97">Device Under Test</text>
 <text x="187.96" y="63.5" size="3.81" layer="97">ADS124S08</text>
+<text x="190.5" y="81.28" size="1.27" layer="97">AIN6</text>
+<text x="190.5" y="78.74" size="1.27" layer="97">AIN7</text>
+<text x="190.5" y="101.6" size="1.27" layer="97">AIN8</text>
+<text x="190.5" y="99.06" size="1.27" layer="97">AIN9</text>
+<text x="190.5" y="96.52" size="1.27" layer="97">AIN10</text>
+<text x="190.5" y="93.98" size="1.27" layer="97">AIN11</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
@@ -1340,7 +1346,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <junction x="170.18" y="134.62"/>
 </segment>
 </net>
-<net name="AIN6" class="0">
+<net name="AIN8" class="0">
 <segment>
 <label x="172.72" y="101.6" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="172.72" y1="101.6" x2="175.26" y2="101.6" width="0.1524" layer="91"/>
@@ -1352,7 +1358,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="RA3" gate="A" pin="1"/>
 </segment>
 </net>
-<net name="AIN7" class="0">
+<net name="AIN9" class="0">
 <segment>
 <label x="172.72" y="99.06" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="172.72" y1="99.06" x2="175.26" y2="99.06" width="0.1524" layer="91"/>
@@ -1421,7 +1427,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="172.72" y1="73.66" x2="175.26" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="AIN8" class="0">
+<net name="AIN10" class="0">
 <segment>
 <wire x1="175.26" y1="96.52" x2="172.72" y2="96.52" width="0.1524" layer="91"/>
 <label x="172.72" y="96.52" size="1.27" layer="95" rot="R180" xref="yes"/>
@@ -1433,7 +1439,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="RA3" gate="A" pin="3"/>
 </segment>
 </net>
-<net name="AIN9" class="0">
+<net name="AIN11" class="0">
 <segment>
 <wire x1="175.26" y1="93.98" x2="172.72" y2="93.98" width="0.1524" layer="91"/>
 <label x="172.72" y="93.98" size="1.27" layer="95" rot="R180" xref="yes"/>
@@ -1445,7 +1451,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="RA3" gate="A" pin="4"/>
 </segment>
 </net>
-<net name="AIN10" class="0">
+<net name="REFP0" class="0">
 <segment>
 <wire x1="175.26" y1="88.9" x2="172.72" y2="88.9" width="0.1524" layer="91"/>
 <label x="172.72" y="88.9" size="1.27" layer="95" rot="R180" xref="yes"/>
@@ -1467,18 +1473,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="137.16" y1="149.86" x2="139.7" y2="149.86" width="0.1524" layer="91"/>
 <label x="139.7" y="149.86" size="1.27" layer="95" xref="yes"/>
 <pinref part="RA4" gate="A" pin="4"/>
-</segment>
-</net>
-<net name="AIN11" class="0">
-<segment>
-<pinref part="U3" gate="A" pin="REFN0"/>
-<wire x1="175.26" y1="86.36" x2="172.72" y2="86.36" width="0.1524" layer="91"/>
-<label x="172.72" y="86.36" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<wire x1="134.62" y1="68.58" x2="137.16" y2="68.58" width="0.1524" layer="91"/>
-<label x="137.16" y="68.58" size="1.27" layer="95" xref="yes"/>
-<pinref part="U1" gate="A" pin="2"/>
 </segment>
 </net>
 <net name="SPI_CS" class="0">
@@ -1523,14 +1517,14 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <label x="228.6" y="114.3" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="REFP1" class="0">
+<net name="AIN6" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="REFP1"/>
 <wire x1="175.26" y1="81.28" x2="172.72" y2="81.28" width="0.1524" layer="91"/>
 <label x="172.72" y="81.28" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="REFN1" class="0">
+<net name="AIN7" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="REFN1"/>
 <wire x1="175.26" y1="78.74" x2="172.72" y2="78.74" width="0.1524" layer="91"/>
@@ -1609,7 +1603,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="U4" gate="A" pin="19"/>
 </segment>
 </net>
-<net name="AIN6_QFN" class="0">
+<net name="AIN8_QFN" class="0">
 <segment>
 <pinref part="RA3" gate="A" pin="8"/>
 <wire x1="111.76" y1="99.06" x2="109.22" y2="99.06" width="0.1524" layer="91"/>
@@ -1621,7 +1615,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="U4" gate="A" pin="7"/>
 </segment>
 </net>
-<net name="AIN7_QFN" class="0">
+<net name="AIN9_QFN" class="0">
 <segment>
 <pinref part="RA3" gate="A" pin="7"/>
 <wire x1="111.76" y1="93.98" x2="109.22" y2="93.98" width="0.1524" layer="91"/>
@@ -1633,19 +1627,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="U4" gate="A" pin="5"/>
 </segment>
 </net>
-<net name="AIN8_QFN" class="0">
-<segment>
-<pinref part="RA3" gate="A" pin="6"/>
-<wire x1="111.76" y1="88.9" x2="109.22" y2="88.9" width="0.1524" layer="91"/>
-<label x="109.22" y="88.9" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<label x="17.78" y="109.22" size="1.27" layer="95" rot="R180" xref="yes"/>
-<wire x1="22.86" y1="109.22" x2="17.78" y2="109.22" width="0.1524" layer="91"/>
-<pinref part="U4" gate="A" pin="3"/>
-</segment>
-</net>
-<net name="AIN9_QFN" class="0">
+<net name="AIN11_QFN" class="0">
 <segment>
 <pinref part="RA3" gate="A" pin="5"/>
 <wire x1="111.76" y1="83.82" x2="109.22" y2="83.82" width="0.1524" layer="91"/>
@@ -1655,30 +1637,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <label x="20.32" y="119.38" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="22.86" y1="119.38" x2="20.32" y2="119.38" width="0.1524" layer="91"/>
 <pinref part="U4" gate="A" pin="1"/>
-</segment>
-</net>
-<net name="AIN10_QFN" class="0">
-<segment>
-<pinref part="U1" gate="A" pin="4"/>
-<wire x1="114.3" y1="71.12" x2="111.76" y2="71.12" width="0.1524" layer="91"/>
-<label x="111.76" y="71.12" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<label x="40.64" y="76.2" size="1.27" layer="95" rot="R270" xref="yes"/>
-<pinref part="U4" gate="A" pin="9"/>
-<wire x1="40.64" y1="78.74" x2="40.64" y2="76.2" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="AIN11_QFN" class="0">
-<segment>
-<pinref part="U1" gate="A" pin="3"/>
-<wire x1="114.3" y1="68.58" x2="111.76" y2="68.58" width="0.1524" layer="91"/>
-<label x="111.76" y="68.58" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<label x="60.96" y="76.2" size="1.27" layer="95" rot="R270" xref="yes"/>
-<pinref part="U4" gate="A" pin="13"/>
-<wire x1="60.96" y1="78.74" x2="60.96" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="QFN4" class="0">
@@ -1700,6 +1658,54 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="U4" gate="A" pin="11"/>
 <wire x1="50.8" y1="78.74" x2="50.8" y2="76.2" width="0.1524" layer="91"/>
 <label x="50.8" y="76.2" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="REFN0" class="0">
+<segment>
+<pinref part="U3" gate="A" pin="REFN0"/>
+<wire x1="175.26" y1="86.36" x2="172.72" y2="86.36" width="0.1524" layer="91"/>
+<label x="172.72" y="86.36" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<wire x1="134.62" y1="68.58" x2="137.16" y2="68.58" width="0.1524" layer="91"/>
+<label x="137.16" y="68.58" size="1.27" layer="95" xref="yes"/>
+<pinref part="U1" gate="A" pin="2"/>
+</segment>
+</net>
+<net name="REFN0_QFN" class="0">
+<segment>
+<pinref part="U1" gate="A" pin="3"/>
+<wire x1="114.3" y1="68.58" x2="111.76" y2="68.58" width="0.1524" layer="91"/>
+<label x="111.76" y="68.58" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<label x="60.96" y="76.2" size="1.27" layer="95" rot="R270" xref="yes"/>
+<pinref part="U4" gate="A" pin="13"/>
+<wire x1="60.96" y1="78.74" x2="60.96" y2="76.2" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="REFP0_QFN" class="0">
+<segment>
+<pinref part="U1" gate="A" pin="4"/>
+<wire x1="114.3" y1="71.12" x2="111.76" y2="71.12" width="0.1524" layer="91"/>
+<label x="111.76" y="71.12" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<label x="40.64" y="76.2" size="1.27" layer="95" rot="R270" xref="yes"/>
+<pinref part="U4" gate="A" pin="9"/>
+<wire x1="40.64" y1="78.74" x2="40.64" y2="76.2" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="AIN10_QFN" class="0">
+<segment>
+<pinref part="RA3" gate="A" pin="6"/>
+<wire x1="111.76" y1="88.9" x2="109.22" y2="88.9" width="0.1524" layer="91"/>
+<label x="109.22" y="88.9" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<label x="17.78" y="109.22" size="1.27" layer="95" rot="R180" xref="yes"/>
+<wire x1="22.86" y1="109.22" x2="17.78" y2="109.22" width="0.1524" layer="91"/>
+<pinref part="U4" gate="A" pin="3"/>
 </segment>
 </net>
 </nets>
