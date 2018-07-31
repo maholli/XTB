@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.0.1">
+<eagle version="9.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -676,6 +676,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <param name="checkRestrict" value="1"/>
 <param name="checkStop" value="1"/>
 <param name="checkValues" value="0"/>
+<param name="checkNames" value="1"/>
+<param name="checkWireStubs" value="1"/>
+<param name="checkPolygonWidth" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -1032,22 +1035,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="9.7536" y1="11.5787875" x2="9.7536" y2="11.6693" width="0.127" layer="1"/>
 <wire x1="8.9128" y1="10.7379875" x2="9.7536" y2="11.5787875" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN11">
-<contactref element="U3" pad="29"/>
-<contactref element="U1" pad="2"/>
-<wire x1="9.5628" y1="8.022403125" x2="9.609603125" y2="7.9756" width="0.127" layer="1"/>
-<wire x1="9.5628" y1="8.022403125" x2="10.189396875" y2="8.022403125" width="0.127" layer="1"/>
-<wire x1="10.189396875" y1="8.022403125" x2="10.2362" y2="7.9756" width="0.127" layer="1"/>
-<via x="10.2362" y="7.9756" extent="1-16" drill="0.254"/>
-<wire x1="11.0109" y1="7.6835" x2="10.7188" y2="7.9756" width="0.127" layer="1"/>
-<wire x1="10.7188" y1="7.9756" x2="10.2362" y2="7.9756" width="0.127" layer="1"/>
-<wire x1="9.779" y1="6.1553" x2="9.779" y2="7.5184" width="0.127" layer="15"/>
-<wire x1="9.779" y1="7.5184" x2="10.2362" y2="7.9756" width="0.127" layer="15"/>
-<wire x1="10.16" y1="5.7743" x2="9.779" y2="6.1553" width="0.127" layer="15"/>
-<via x="12.7" y="0.254" extent="1-16" drill="1.27" diameter="2.159"/>
-<wire x1="10.16" y1="2.794" x2="10.16" y2="5.7743" width="0.127" layer="15"/>
-<wire x1="12.7" y1="0.254" x2="10.16" y2="2.794" width="0.127" layer="15"/>
-</signal>
 <signal name="AIN5">
 <contactref element="U3" pad="2"/>
 <contactref element="RA4" pad="3"/>
@@ -1090,26 +1077,26 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="5.3149" y1="11.2713" x2="5.3149" y2="11.6693" width="0.127" layer="1"/>
 <wire x1="5.9128" y1="10.6734" x2="5.3149" y2="11.2713" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN6">
+<signal name="AIN8">
 <contactref element="U3" pad="22"/>
 <contactref element="RA3" pad="1"/>
 <wire x1="7.9128" y1="5.3724" x2="7.9128" y2="4.4838" width="0.127" layer="1"/>
 <wire x1="7.9128" y1="4.4838" x2="8.1026" y2="4.294" width="0.127" layer="1"/>
 <wire x1="8.1026" y1="4.294" x2="8.1026" y2="3.9263" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN7">
+<signal name="AIN9">
 <contactref element="U3" pad="21"/>
 <contactref element="RA3" pad="2"/>
 <wire x1="7.412803125" y1="5.3724" x2="7.412803125" y2="4.182603125" width="0.127" layer="1"/>
 <wire x1="7.412803125" y1="4.182603125" x2="7.3343" y2="3.9263" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN8">
+<signal name="AIN10">
 <contactref element="U3" pad="20"/>
 <contactref element="RA3" pad="3"/>
 <wire x1="6.9128" y1="5.3724" x2="6.9128" y2="4.1715" width="0.127" layer="1"/>
 <wire x1="6.9128" y1="4.1715" x2="6.8454" y2="3.9263" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN9">
+<signal name="AIN11">
 <contactref element="U3" pad="19"/>
 <contactref element="RA3" pad="4"/>
 <wire x1="6.3754" y1="5.335" x2="6.4128" y2="5.3724" width="0.127" layer="1"/>
@@ -1117,7 +1104,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="6.0706" y1="4.3434" x2="6.0706" y2="3.9263" width="0.127" layer="1"/>
 <wire x1="6.4128" y1="4.6856" x2="6.0706" y2="4.3434" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN10">
+<signal name="REFP0">
 <contactref element="U3" pad="30"/>
 <contactref element="U1" pad="1"/>
 <wire x1="9.5628" y1="8.5224" x2="9.6002" y2="8.5598" width="0.127" layer="1"/>
@@ -1255,7 +1242,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <vertex x="0.254" y="7.239"/>
 </polygon>
 </signal>
-<signal name="REFP1">
+<signal name="AIN6">
 <contactref element="U3" pad="32"/>
 <wire x1="9.5628" y1="9.522403125" x2="9.5628" y2="10.0454" width="0.127" layer="1"/>
 <wire x1="9.5628" y1="10.0454" x2="9.5758" y2="10.0584" width="0.127" layer="1"/>
@@ -1266,7 +1253,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="10.8331" y1="11.3157" x2="10.8331" y2="21.1455" width="0.127" layer="15"/>
 <wire x1="9.5758" y1="10.0584" x2="10.8331" y2="11.3157" width="0.127" layer="15"/>
 </signal>
-<signal name="REFN1">
+<signal name="AIN7">
 <contactref element="U3" pad="31"/>
 <wire x1="9.5628" y1="9.0224" x2="10.0892" y2="9.0224" width="0.127" layer="1"/>
 <wire x1="10.0892" y1="9.0224" x2="10.2362" y2="9.1694" width="0.127" layer="1"/>
@@ -1378,7 +1365,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="6.3754" y1="21.971" x2="5.6642" y2="21.2598" width="0.127" layer="15"/>
 <wire x1="5.6642" y1="21.2598" x2="5.6642" y2="21.1836" width="0.127" layer="15"/>
 </signal>
-<signal name="AIN6_QFN">
+<signal name="AIN8_QFN">
 <contactref element="RA3" pad="8"/>
 <wire x1="8.1026" y1="2.7285" x2="8.128" y2="2.7031" width="0.127" layer="1"/>
 <wire x1="8.128" y1="2.7031" x2="8.128" y2="1.9431" width="0.127" layer="1"/>
@@ -1392,7 +1379,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="9.64275" y1="14.923" x2="9.6012" y2="14.96455" width="0.127" layer="1"/>
 <wire x1="9.6012" y1="14.96455" x2="9.6012" y2="15.875" width="0.127" layer="1"/>
 </signal>
-<signal name="AIN7_QFN">
+<signal name="AIN9_QFN">
 <contactref element="RA3" pad="7"/>
 <wire x1="7.3278" y1="2.7285" x2="7.4168" y2="2.6395" width="0.127" layer="1"/>
 <wire x1="7.4168" y1="2.6395" x2="7.4168" y2="1.9431" width="0.127" layer="1"/>
@@ -1410,26 +1397,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="7.62" y1="0.254" x2="7.62" y2="1.7399" width="0.127" layer="15"/>
 <wire x1="7.62" y1="1.7399" x2="7.4168" y2="1.9431" width="0.127" layer="15"/>
 </signal>
-<signal name="AIN8_QFN">
-<contactref element="RA3" pad="6"/>
-<wire x1="6.8389" y1="2.7285" x2="6.7818" y2="2.6714" width="0.127" layer="1"/>
-<wire x1="6.7818" y1="2.6714" x2="6.7818" y2="1.9431" width="0.127" layer="1"/>
-<via x="6.7818" y="1.9431" extent="1-16" drill="0.254"/>
-<wire x1="6.7437" y1="7.946" x2="7.0358" y2="8.2381" width="0.127" layer="15"/>
-<contactref element="U4" pad="3"/>
-<wire x1="6.7437" y1="7.946" x2="6.74956875" y2="6.553171875" width="0.127" layer="15"/>
-<wire x1="6.43775" y1="14.923" x2="6.43775" y2="15.86345" width="0.127" layer="1"/>
-<wire x1="6.43775" y1="15.86345" x2="6.4262" y2="15.875" width="0.127" layer="1"/>
-<via x="6.4262" y="15.875" extent="1-16" drill="0.254"/>
-<wire x1="6.4262" y1="15.875" x2="7.0358" y2="15.2654" width="0.127" layer="15"/>
-<wire x1="7.0358" y1="8.2381" x2="7.0358" y2="15.2654" width="0.127" layer="15"/>
-<wire x1="6.74956875" y1="1.97533125" x2="6.74956875" y2="6.553171875" width="0.127" layer="15"/>
-<wire x1="6.74956875" y1="1.97533125" x2="6.7818" y2="1.9431" width="0.127" layer="15"/>
-<via x="5.08" y="0.254" extent="1-16" drill="1.27" diameter="2.159"/>
-<wire x1="5.08" y1="0.254" x2="6.74956875" y2="1.92356875" width="0.127" layer="15"/>
-<wire x1="6.74956875" y1="1.92356875" x2="6.74956875" y2="1.97533125" width="0.127" layer="15"/>
-</signal>
-<signal name="AIN9_QFN">
+<signal name="AIN11_QFN">
 <contactref element="RA3" pad="5"/>
 <wire x1="6.0706" y1="2.7285" x2="6.0706" y2="1.9431" width="0.127" layer="1"/>
 <via x="6.0706" y="1.9431" extent="1-16" drill="0.254"/>
@@ -1443,32 +1411,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="6.20605" y1="4.47885" x2="6.20605" y2="4.82605" width="0.127" layer="15"/>
 <wire x1="6.20605" y1="4.82605" x2="6.1849" y2="4.8472" width="0.127" layer="15"/>
 <wire x1="6.1849" y1="4.8472" x2="6.1849" y2="14.5415" width="0.127" layer="15"/>
-</signal>
-<signal name="AIN10_QFN">
-<contactref element="U1" pad="4"/>
-<wire x1="12.2047" y1="8.8265" x2="12.2682" y2="8.8646" width="0.127" layer="1"/>
-<wire x1="12.2682" y1="8.8646" x2="12.9794" y2="8.8646" width="0.127" layer="1"/>
-<via x="12.9794" y="8.8646" extent="1-16" drill="0.254"/>
-<contactref element="U4" pad="9"/>
-<wire x1="11.239" y1="17.3205" x2="12.1897" y2="17.3205" width="0.127" layer="1"/>
-<wire x1="12.1897" y1="17.3205" x2="12.192" y2="17.3228" width="0.127" layer="1"/>
-<via x="12.192" y="17.3228" extent="1-16" drill="0.254"/>
-<wire x1="12.9794" y1="8.8646" x2="11.8491" y2="9.9949" width="0.127" layer="15"/>
-<wire x1="11.8491" y1="9.9949" x2="11.8491" y2="16.9799" width="0.127" layer="15"/>
-<wire x1="11.8491" y1="16.9799" x2="12.192" y2="17.3228" width="0.127" layer="15"/>
-</signal>
-<signal name="AIN11_QFN">
-<contactref element="U1" pad="3"/>
-<wire x1="12.2047" y1="7.6835" x2="12.2428" y2="7.6708" width="0.127" layer="1"/>
-<wire x1="12.2428" y1="7.6708" x2="12.9794" y2="7.6708" width="0.127" layer="1"/>
-<via x="12.9794" y="7.6708" extent="1-16" drill="0.254"/>
-<contactref element="U4" pad="13"/>
-<wire x1="11.239" y1="20.5255" x2="12.1897" y2="20.5255" width="0.127" layer="1"/>
-<wire x1="12.1897" y1="20.5255" x2="12.192" y2="20.5232" width="0.127" layer="1"/>
-<via x="12.192" y="20.5232" extent="1-16" drill="0.254"/>
-<wire x1="12.192" y1="20.5232" x2="11.5062" y2="19.8374" width="0.127" layer="15"/>
-<wire x1="11.5062" y1="9.144" x2="12.9794" y2="7.6708" width="0.127" layer="15"/>
-<wire x1="11.5062" y1="19.8374" x2="11.5062" y2="9.144" width="0.127" layer="15"/>
 </signal>
 <signal name="N$4">
 <via x="14.986" y="15.24" extent="1-16" drill="1.27" diameter="2.159"/>
@@ -1507,7 +1449,75 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="14.986" y1="20.32" x2="13.589" y2="20.32" width="0.127" layer="15"/>
 <wire x1="13.589" y1="20.32" x2="12.192" y2="18.923" width="0.127" layer="15"/>
 </signal>
+<signal name="REFN0">
+<contactref element="U3" pad="29"/>
+<wire x1="9.5628" y1="8.022403125" x2="9.609603125" y2="7.9756" width="0.127" layer="1"/>
+<contactref element="U1" pad="2"/>
+<wire x1="10.189396875" y1="8.022403125" x2="10.2362" y2="7.9756" width="0.127" layer="1"/>
+<via x="10.2362" y="7.9756" extent="1-16" drill="0.254"/>
+<wire x1="11.0109" y1="7.6835" x2="10.7188" y2="7.9756" width="0.127" layer="1"/>
+<wire x1="10.7188" y1="7.9756" x2="10.2362" y2="7.9756" width="0.127" layer="1"/>
+<wire x1="9.779" y1="6.1553" x2="9.779" y2="7.5184" width="0.127" layer="15"/>
+<wire x1="9.779" y1="7.5184" x2="10.2362" y2="7.9756" width="0.127" layer="15"/>
+<wire x1="10.16" y1="5.7743" x2="9.779" y2="6.1553" width="0.127" layer="15"/>
+<via x="12.7" y="0.254" extent="1-16" drill="1.27" diameter="2.159"/>
+<wire x1="10.16" y1="2.794" x2="10.16" y2="5.7743" width="0.127" layer="15"/>
+<wire x1="12.7" y1="0.254" x2="10.16" y2="2.794" width="0.127" layer="15"/>
+<wire x1="9.779" y1="7.5184" x2="9.609603125" y2="7.9756" width="0" layer="19" extent="1-15"/>
+</signal>
+<signal name="REFN0_QFN">
+<contactref element="U1" pad="3"/>
+<wire x1="12.2428" y1="7.6708" x2="12.9794" y2="7.6708" width="0.127" layer="1"/>
+<via x="12.9794" y="7.6708" extent="1-16" drill="0.254"/>
+<contactref element="U4" pad="13"/>
+<wire x1="11.239" y1="20.5255" x2="12.1897" y2="20.5255" width="0.127" layer="1"/>
+<wire x1="12.1897" y1="20.5255" x2="12.192" y2="20.5232" width="0.127" layer="1"/>
+<via x="12.192" y="20.5232" extent="1-16" drill="0.254"/>
+<wire x1="12.192" y1="20.5232" x2="11.5062" y2="19.8374" width="0.127" layer="15"/>
+<wire x1="11.5062" y1="9.144" x2="12.9794" y2="7.6708" width="0.127" layer="15"/>
+<wire x1="11.5062" y1="19.8374" x2="11.5062" y2="9.144" width="0.127" layer="15"/>
+<wire x1="12.2428" y1="7.6708" x2="12.2047" y2="7.6835" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="REFP0_QFN">
+<contactref element="U1" pad="4"/>
+<wire x1="12.2682" y1="8.8646" x2="12.9794" y2="8.8646" width="0.127" layer="1"/>
+<via x="12.9794" y="8.8646" extent="1-16" drill="0.254"/>
+<contactref element="U4" pad="9"/>
+<wire x1="11.239" y1="17.3205" x2="12.1897" y2="17.3205" width="0.127" layer="1"/>
+<wire x1="12.1897" y1="17.3205" x2="12.192" y2="17.3228" width="0.127" layer="1"/>
+<via x="12.192" y="17.3228" extent="1-16" drill="0.254"/>
+<wire x1="12.9794" y1="8.8646" x2="11.8491" y2="9.9949" width="0.127" layer="15"/>
+<wire x1="11.8491" y1="9.9949" x2="11.8491" y2="16.9799" width="0.127" layer="15"/>
+<wire x1="11.8491" y1="16.9799" x2="12.192" y2="17.3228" width="0.127" layer="15"/>
+<wire x1="12.2682" y1="8.8646" x2="12.2047" y2="8.8265" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="AIN10_QFN">
+<contactref element="RA3" pad="6"/>
+<wire x1="6.7818" y1="2.6714" x2="6.7818" y2="1.9431" width="0.127" layer="1"/>
+<via x="6.7818" y="1.9431" extent="1-16" drill="0.254"/>
+<wire x1="6.7437" y1="7.946" x2="7.0358" y2="8.2381" width="0.127" layer="15"/>
+<contactref element="U4" pad="3"/>
+<wire x1="6.7437" y1="7.946" x2="6.74956875" y2="6.553171875" width="0.127" layer="15"/>
+<wire x1="6.43775" y1="14.923" x2="6.43775" y2="15.86345" width="0.127" layer="1"/>
+<wire x1="6.43775" y1="15.86345" x2="6.4262" y2="15.875" width="0.127" layer="1"/>
+<via x="6.4262" y="15.875" extent="1-16" drill="0.254"/>
+<wire x1="6.4262" y1="15.875" x2="7.0358" y2="15.2654" width="0.127" layer="15"/>
+<wire x1="7.0358" y1="8.2381" x2="7.0358" y2="15.2654" width="0.127" layer="15"/>
+<wire x1="6.74956875" y1="1.97533125" x2="6.74956875" y2="6.553171875" width="0.127" layer="15"/>
+<wire x1="6.74956875" y1="1.97533125" x2="6.7818" y2="1.9431" width="0.127" layer="15"/>
+<via x="5.08" y="0.254" extent="1-16" drill="1.27" diameter="2.159"/>
+<wire x1="5.08" y1="0.254" x2="6.74956875" y2="1.92356875" width="0.127" layer="15"/>
+<wire x1="6.74956875" y1="1.92356875" x2="6.74956875" y2="1.97533125" width="0.127" layer="15"/>
+<wire x1="6.7818" y1="2.6714" x2="6.8389" y2="2.7285" width="0" layer="19" extent="1-1"/>
+</signal>
 </signals>
+<mfgpreviewcolors>
+<mfgpreviewcolor name="soldermaskcolor" color="0xC8008000"/>
+<mfgpreviewcolor name="silkscreencolor" color="0xFFFEFEFE"/>
+<mfgpreviewcolor name="backgroundcolor" color="0xFF282828"/>
+<mfgpreviewcolor name="coppercolor" color="0xFFFFBF00"/>
+<mfgpreviewcolor name="substratecolor" color="0xFF786E46"/>
+</mfgpreviewcolors>
 </board>
 </drawing>
 <compatibility>
