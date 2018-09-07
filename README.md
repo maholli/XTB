@@ -13,7 +13,7 @@ In-situ device driver & data acquisition board for use in Stanford's eXtreme Env
 operating, measuring, and saving data with the XTB boards is handled by a microcontroller. Nearly any microcontroller will work, and the code is written in Arduino to aid in use. The example below uses an [Adafruit Feather M0 with SD card](https://www.adafruit.com/product/2796) for easy datalogging capability. 
 
 <p align="middle">
-  <img width="900" src="https://github.com/maholli/XTB/blob/master/media/XTB_wiring.PNG">
+  <img width="1000" src="https://github.com/maholli/XTB/blob/master/media/XTB_wiring.PNG">
 </p>
 
 
