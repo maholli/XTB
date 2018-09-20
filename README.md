@@ -29,10 +29,12 @@ How it works:
     * `reset,` resets the ADC to a preconfigured state
     * `delay [wait time (in ms)],` tells the Feather to wait for specific amount of time
     * `temp [save data? options: "t" or "f"],` tells the ADC to make a temperature measurement and (depending on the argument), whether or not to save the data to the SD card
-    * `read [+ pin to read] [- pin to read] [IDAC pin] [VBias Pin] [save data options: "t" or "f"] [wait time (in ms)] [measurements to read] [IDAC mag] [data label text],` tells the ADC to configure itself according to the arguments and then instructs the ADC to make a series of voltage measurements using the new configuration
+    * `read [+ pin to read] [- pin to read] [IDAC pin] [VBias Pin] [save data options: "t" or "f"] [wait time (in ms)] [# of measurements to save] [IDAC mag] [data label text],` tells the ADC to configure itself according to the arguments and then instructs the ADC to make a series of voltage measurements using the new configuration
     * `batt,` measures the battery voltage of the Feather board and saves it to the SD card
     * `readout,` tells the ADC to print the state of all of its registers over the serial port - see TI spreadsheet to decode register values
     * `calibrate,` tells the ADC to perform a self calibration and adjust the offset registers accordingly - usually followed by a readout command
     * `gpio [which GPIO pins to enable] [what state to set the gpio pins],` tells the ADC to configure the gpio registers accordingly - argument 1 is a decimal input for the 0x10 register (GPIODAT) and argument 2 is a decimal input for the 0x11 register (GPIOCON)
     
-
+<p align="middle">
+  <img width="200" src="https://github.com/maholli/XTB/blob/master/media/configExample.PNG"><br>Example config.txt file that starts the XTB, makes a temperature measurement (saves it to the SD card), delays for 100ms, and then repeats.
+</p>
