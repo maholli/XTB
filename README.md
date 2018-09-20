@@ -34,10 +34,9 @@ How it works:
     * `readout,` tells the ADC to print the state of all of its registers over the serial port - see TI spreadsheet to decode register values
     * `calibrate,` tells the ADC to perform a self calibration and adjust the offset registers accordingly - usually followed by a readout command
     * `gpio [GPIO pins] [GPIO state],` tells the ADC to configure the gpio registers accordingly
-
+#### config.txt command reference
 | Reference                     | Description                                                                             | Valid Inputs                                         |
 |-------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------|
-|                               |                                                                                         |                                                      |
 | `[+ pin to read]`             | Positive terminal of voltage measurement                                                | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 12 (12 is GND) |
 | `[- pin to read]`             | Negative terminal of voltage measurement                                                | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 12 (12 is GND) |
 | `[IDAC pin]`                  | sets the current-source pin                                                             | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 15 (off)       |
