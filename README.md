@@ -29,11 +29,14 @@ How it works:
     * `reset,` resets the ADC to a preconfigured state
     * `delay [wait time (in ms)],` tells the Feather to wait for specific amount of time
     * `temp [save data? options: "t" or "f"],` tells the ADC to make a temperature measurement and (depending on the argument), whether or not to save the data to the SD card
-    * `read [+ pin to read] [- pin to read] [IDAC pin] [VBias Pin] [save data options: "t" or "f"] [wait time (in ms)] [# of measurements to save] [IDAC mag] [data label text],` tells the ADC to configure itself according to the arguments and then instructs the ADC to make a series of voltage measurements using the new configuration
+    * `read [+ pin to read] [- pin to read] [IDAC pin] [VBias Pin] [save data] [wait time (in ms)] [# of measurements to save] [IDAC mag] [data label text],` tells the ADC to configure itself according to the arguments and then instructs the ADC to make a series of voltage measurements using the new configuration
       * `[+ pin to read]` accepts: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 (12 is GND)
       * `[- pin to read]` accepts: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 (12 is GND)
-      * `[IDAC pin]` accepts: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+      * `[IDAC pin]` sets the current-source pin:
+        * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+        * 15 (off)
       * `[VBias Pin]` applies 0.275V to specified pin:
+        * 0 (off)
         * 1 (AIN0)
         * 2 (AIN1)
         * 3 (AIN0 and AIN1)
@@ -41,7 +44,13 @@ How it works:
         * 5 (AIN0 and AIN2)
         * 6 (AIN1 and AIN2)
         * 8 (AIN3)
-      * `[IDAC mag]` sets the current source level *MUST HAVE A PATH TO GROUND*
+      * `[save data]` choose whether or not to record data to SD card:
+        * t (save data = true)
+        * f (save data = false)
+      * `[wait time (in ms)]` accepts integers from 1 - 500
+      * `[# of measurements to save]` 2X the number of measurements to perform for given parameters. accepts integers from 0 - 200
+      * `[IDAC mag]` sets the drive current **CORRESPONDING IDAC PIN MUST HAVE PATH TO GROUND**
+        * 0 (off)
         * 1 10 uA
         * 2 50 uA
         * 3 100 uA
@@ -51,6 +60,7 @@ How it works:
         * 7 1000 uA
         * 8 1500 uA
         * 9 2000 uA
+      * `[data label text]` identifying string appended to each line of the data file for data analysis correlation
     * `batt,` measures the battery voltage of the Feather board and saves it to the SD card
     * `readout,` tells the ADC to print the state of all of its registers over the serial port - see TI spreadsheet to decode register values
     * `calibrate,` tells the ADC to perform a self calibration and adjust the offset registers accordingly - usually followed by a readout command
