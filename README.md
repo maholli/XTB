@@ -36,5 +36,10 @@ How it works:
     * `gpio [which GPIO pins to enable] [what state to set the gpio pins],` tells the ADC to configure the gpio registers accordingly - argument 1 is a decimal input for the 0x10 register (GPIODAT) and argument 2 is a decimal input for the 0x11 register (GPIOCON)
     
 <p align="middle">
-  <img width="200" src="https://github.com/maholli/XTB/blob/master/media/configExample.PNG"><br>Example config.txt file that starts the XTB, makes a temperature measurement (saves it to the SD card), delays for 100ms, and then repeats.
+  <img width="200" src="https://github.com/maholli/XTB/blob/master/media/configExample.PNG"><br>Simple config.txt example file that starts the XTB, makes a temperature measurement (saves it to the SD card), delays for 100ms, and then repeats.
+</p>
+<br>
+<br>
+<p align="middle">
+  <img width="300" src="https://github.com/maholli/XTB/blob/master/media/configExample2.PNG"><br>More complex config.txt example file that performs measurements on multiple devices and saves to the SD card.
 </p>
