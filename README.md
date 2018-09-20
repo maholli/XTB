@@ -76,6 +76,17 @@ How it works:
 |                               |                                                                                         | 7 (GPIO0, GPIO1, and GPIO2 enabled)                  |
 |                               |                                                                                         | 8 (GPIO3 enabled)                                    |
 |                               |                                                                                         | 15 (all GPIO pins enabled)                           |
+| `[GPIO state]`                | decimal input for the 0x11 register (GPIOCON)                                           |                                                      |
+|                               |                                                                                         | 0 (all GPIO set to HIGH)                             |
+|                               |                                                                                         | 1 (GPIO0 = HIGH)                                     |
+|                               |                                                                                         | 2 (GPIO1 = HIGH)                                     |
+|                               |                                                                                         | 3 (GPIO0 and GPIO1 enabled)                          |
+|                               |                                                                                         | 4 (GPIO2 = HIGH)                                     |
+|                               |                                                                                         | 5 (GPIO0 and GPIO2 = HIGH)                           |
+|                               |                                                                                         | 6 (GPIO1 and GPIO2 = HIGH)                           |
+|                               |                                                                                         | 7 (GPIO0, GPIO1, and GPIO2 = HIGH)                   |
+|                               |                                                                                         | 8 (GPIO3 = HIGH)                                     |
+|                               |                                                                                         | 15 (all GPIO pins = LOW)                             |
 
 <p align="middle">
   <img width="200" src="https://github.com/maholli/XTB/blob/master/media/configExample.PNG"><br>Simple config.txt example file that starts the XTB, makes a temperature measurement (saves it to the SD card), delays for 100ms, and then repeats.
