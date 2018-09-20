@@ -54,7 +54,7 @@ How it works:
 |                               |                                                                                         | f (save data = false)                                |
 | `[wait time ]`                | amount of time to delay in ms                                                           | 1 - 500                                              |
 | `[# of measurements to save]` | 2X the number of measurements to perform for given parameters                           | 0 - 200                                              |
-| `[IDAC mag]`                  | sets the current-source level **CORRESPONDING IDAC PIN MUST HAVE PATH TO GROUND**       | 0 (off)                                              |
+| `[IDAC mag]`                  | sets the current-source level <br> **CORRESPONDING IDAC PIN MUST HAVE PATH TO GROUND**       | 0 (off)                                              |
 |                               |                                                                                         | 1 10 uA                                              |
 |                               |                                                                                         | 2 50 uA                                              |
 |                               |                                                                                         | 3 100 uA                                             |
@@ -64,7 +64,7 @@ How it works:
 |                               |                                                                                         | 7 1000 uA                                            |
 |                               |                                                                                         | 8 1500 uA                                            |
 |                               |                                                                                         | 9 2000 uA                                            |
-| `[data label text]`           | identifying string appended to each line of the data file for data analysis correlation |                                                      |
+| `[data label text]`           | identifying string appended to each line <br> of the data file for data analysis correlation |                                                      |
 | `[GPIO pins]`                 | decimal input for the 0x10 register (GPIODAT)                                           |                                                      |
 |                               |                                                                                         | 0 (all GPIO pins disabled)                           |
 |                               |                                                                                         | 1 (GPIO0 enabled)                                    |
