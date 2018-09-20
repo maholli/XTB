@@ -38,55 +38,17 @@ How it works:
 | Reference                     | Description                                                                             | Valid Inputs                                         |
 |-------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------|
 |                               |                                                                                         |                                                      |
-| `[+ pin to read]`             | Positive terminal of voltage measurement                                                | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 (12 is GND) |
-| `[- pin to read]`             | Negative terminal of voltage measurement                                                | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 (12 is GND) |
-| `[IDAC pin]`                  | sets the current-source pin                                                             | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                 |
-|                               |                                                                                         | 15 (off)                                             |
-| `[VBias Pin]`                 | applies 0.275V to specified pin                                                         | 0 (off)                                              |
-|                               |                                                                                         | 1 (AIN0)                                             |
-|                               |                                                                                         | 2 (AIN1)                                             |
-|                               |                                                                                         | 3 (AIN0 and AIN1)                                    |
-|                               |                                                                                         | 4 (AIN2)                                             |
-|                               |                                                                                         | 5 (AIN0 and AIN2)                                    |
-|                               |                                                                                         | 6 (AIN1 and AIN2)                                    |
-|                               |                                                                                         | 8 (AIN3)                                             |
-| `[save data]`                 | choose whether or not to record data to SD card                                         | t (save data = true)                                 |
-|                               |                                                                                         | f (save data = false)                                |
+| `[+ pin to read]`             | Positive terminal of voltage measurement                                                | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 12 (12 is GND) |
+| `[- pin to read]`             | Negative terminal of voltage measurement                                                | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 12 (12 is GND) |
+| `[IDAC pin]`                  | sets the current-source pin                                                             | 0<br> 1<br> 2<br> 3<br> 4<br> 5<br> 6<br> 7<br> 8<br> 9<br> 10<br> 11<br> 15 (off)       |
+| `[VBias Pin]`                 | applies 0.275V to specified pin                                                         | 0 (off)<br>1 (AIN0)<br>2 (AIN1)<br>3 (AIN0 and AIN1)<br>4 (AIN2)<br>(AIN0 and AIN2)<br>6 (AIN1 and AIN2)<br>8 (AIN3)                                           |
+| `[save data]`                 | choose whether or not to record data to SD card                                         | t (save data = true)<br>f (save data = false)                                 |
 | `[wait time ]`                | amount of time to delay in ms                                                           | 1 - 500                                              |
 | `[# of measurements to save]` | 2X the number of measurements to perform for given parameters                           | 0 - 200                                              |
-| `[IDAC mag]`                  | sets the current-source level <br> **CORRESPONDING IDAC PIN MUST HAVE PATH TO GROUND**       | 0 (off)                                              |
-|                               |                                                                                         | 1 10 uA                                              |
-|                               |                                                                                         | 2 50 uA                                              |
-|                               |                                                                                         | 3 100 uA                                             |
-|                               |                                                                                         | 4 250 uA                                             |
-|                               |                                                                                         | 5 500 uA                                             |
-|                               |                                                                                         | 6 750 uA                                             |
-|                               |                                                                                         | 7 1000 uA                                            |
-|                               |                                                                                         | 8 1500 uA                                            |
-|                               |                                                                                         | 9 2000 uA                                            |
-| `[data label text]`           | identifying string appended to each line <br> of the data file for data analysis correlation |                                                      |
-| `[GPIO pins]`                 | decimal input for the 0x10 register (GPIODAT)                                           |                                                      |
-|                               |                                                                                         | 0 (all GPIO pins disabled)                           |
-|                               |                                                                                         | 1 (GPIO0 enabled)                                    |
-|                               |                                                                                         | 2 (GPIO1 enabled)                                    |
-|                               |                                                                                         | 3 (GPIO0 and GPIO1 enabled)                          |
-|                               |                                                                                         | 4 (GPIO2 enabled)                                    |
-|                               |                                                                                         | 5 (GPIO0 and GPIO2 enabled)                          |
-|                               |                                                                                         | 6 (GPIO1 and GPIO2 enabled)                          |
-|                               |                                                                                         | 7 (GPIO0, GPIO1, and GPIO2 enabled)                  |
-|                               |                                                                                         | 8 (GPIO3 enabled)                                    |
-|                               |                                                                                         | 15 (all GPIO pins enabled)                           |
-| `[GPIO state]`                | decimal input for the 0x11 register (GPIOCON)                                           |                                                      |
-|                               |                                                                                         | 0 (all GPIO set to HIGH)                             |
-|                               |                                                                                         | 1 (GPIO0 = HIGH)                                     |
-|                               |                                                                                         | 2 (GPIO1 = HIGH)                                     |
-|                               |                                                                                         | 3 (GPIO0 and GPIO1 enabled)                          |
-|                               |                                                                                         | 4 (GPIO2 = HIGH)                                     |
-|                               |                                                                                         | 5 (GPIO0 and GPIO2 = HIGH)                           |
-|                               |                                                                                         | 6 (GPIO1 and GPIO2 = HIGH)                           |
-|                               |                                                                                         | 7 (GPIO0, GPIO1, and GPIO2 = HIGH)                   |
-|                               |                                                                                         | 8 (GPIO3 = HIGH)                                     |
-|                               |                                                                                         | 15 (all GPIO pins = LOW)                             |
+| `[IDAC mag]`                  | sets the current-source level <br> **CORRESPONDING IDAC PIN MUST HAVE PATH TO GROUND**       | 0 (off)<br>1 10 uA<br>2 50 uA<br>3 100 uA<br>4 250 uA<br>5 500 uA<br>6 750 uA<br>7 1000 uA<br>8 1500 uA<br>9 2000 uA                                              |
+| `[data label text]`           | identifying string appended to each line <br> of the data file for data analysis correlation | String 4 characters or less                                                       |
+| `[GPIO pins]`                 | decimal input for the 0x10 register (GPIODAT)                                           |0 (all GPIO pins disabled)<br>1 (GPIO0 enabled)<br>2 (GPIO1 enabled)<br>3 (GPIO0 and GPIO1 enabled)<br>4 (GPIO2 enabled)<br>5 (GPIO0 and GPIO2 enabled)<br>6 (GPIO1 and GPIO2 enabled)<br>7 (GPIO0, GPIO1, and GPIO2 enabled)<br>8 (GPIO3 enabled)<br>15 (all GPIO pins enabled)|
+| `[GPIO state]`                | decimal input for the 0x11 register (GPIOCON)                                           |0 (all GPIO set to HIGH)<br>1 (GPIO0 = HIGH)<br>2 (GPIO1 = HIGH)<br>3 (GPIO0 and GPIO1 enabled)<br>4 (GPIO2 = HIGH)<br>5 (GPIO0 and GPIO2 = HIGH)<br>6 (GPIO1 and GPIO2 = HIGH)<br>7 (GPIO0, GPIO1, and GPIO2 = HIGH)<br>8 (GPIO3 = HIGH)<br>15 (all GPIO pins = LOW)|
 
 <p align="middle">
   <img width="200" src="https://github.com/maholli/XTB/blob/master/media/configExample.PNG"><br>Simple config.txt example file that starts the XTB, makes a temperature measurement (saves it to the SD card), delays for 100ms, and then repeats.
