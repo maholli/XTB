@@ -36,7 +36,7 @@ String getCommand(String data, char separator, int index)
 void KickSat_Sensor::operate(float* dataOut) {
   int bufIndex = 0;
 
-//  Serial.println(logfile.size()/1e6, 8);
+  Serial.println(logfile.size()/1e6, 8);
   if( (logfile.size()/1e6) >= 100 ) {
     if (logfile.isOpen()) {
       logfile.close();
@@ -526,12 +526,12 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x31);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF2);   //0x47  IDACMUX
   SPI.transfer(0x81);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
@@ -542,7 +542,7 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x20);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA2 = SPI.transfer(0x00);
@@ -552,7 +552,7 @@ void KickSat_Sensor::hallSpinA() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_A = dataConvert(inByteA,inByteB,inByteC);
   decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
-  delay(5); 
+  delay(1); 
 
   /* HALL SPIN -- phase 2 --*/
   digitalWrite(_ADCchipSelect, LOW);
@@ -561,12 +561,12 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x02);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF3);   //0x47  IDACMUX
   SPI.transfer(0x82);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH = SPI.transfer(0x00);
@@ -577,7 +577,7 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH2 = SPI.transfer(0x00);
@@ -587,7 +587,7 @@ void KickSat_Sensor::hallSpinA() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_C = dataConvert(inByteH,inByteI,inByteJ);
   decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
-  delay(5);
+  delay(1);
 
   /* HALL SPIN -- phase 3 --*/
   digitalWrite(_ADCchipSelect, LOW);
@@ -596,12 +596,12 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF0);   //0x47  IDACMUX
   SPI.transfer(0x90);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteK = SPI.transfer(0x00);
@@ -612,7 +612,7 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x02);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteK2 = SPI.transfer(0x00);
@@ -622,7 +622,7 @@ void KickSat_Sensor::hallSpinA() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_D = dataConvert(inByteK,inByteL,inByteM);
   decVal_D2 = dataConvert(inByteK2,inByteL2,inByteM2);
-  delay(5);
+  delay(1);
 
   /* HALL SPIN -- phase 4 --*/
   digitalWrite(_ADCchipSelect, LOW);
@@ -631,12 +631,12 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x20);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF1);   //0x47  IDACMUX
   SPI.transfer(0x88);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);   //NOP to get rid of junk?
   SPI.transfer(0x12); //transfer read command  
   inByteD = SPI.transfer(0x00);
@@ -647,7 +647,7 @@ void KickSat_Sensor::hallSpinA() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x13);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteD2 = SPI.transfer(0x00);
@@ -673,10 +673,10 @@ void KickSat_Sensor::hallSpinA() {
   if (writeable){
     logfile.print(micros());
     logfile.print(",");
-    logfile.print(decVal_A,8),logfile.print(","),
-    logfile.print(decVal_B,8),logfile.print(","),
-    logfile.print(decVal_C,8),logfile.print(","),
-    logfile.print(decVal_D,8),logfile.print(","),
+//    logfile.print(decVal_A,8),logfile.print(","),
+//    logfile.print(decVal_B,8),logfile.print(","),
+//    logfile.print(decVal_C,8),logfile.print(","),
+//    logfile.print(decVal_D,8),logfile.print(","),
     logfile.print(vApplied,8),logfile.print(","),
     logfile.println(dataSpin, DEC);
     logfile.flush();
@@ -701,12 +701,12 @@ void KickSat_Sensor::hallSpinB() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x95);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF8);   //0x47  IDACMUX
-  SPI.transfer(0x90);   //0x48  VBIAS AIN4
-  delay(15);
+  SPI.transfer(0xA0);   //0x48  VBIAS AIN5
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
@@ -717,7 +717,7 @@ void KickSat_Sensor::hallSpinB() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0x84);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA2 = SPI.transfer(0x00);
@@ -727,47 +727,9 @@ void KickSat_Sensor::hallSpinB() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_A = dataConvert(inByteA,inByteB,inByteC);
   decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
-  delay(5); 
+  delay(1); 
 
   /* HALL SPIN -- phase 2 --*/
-
-  digitalWrite(_ADCchipSelect, LOW);
-  delayMicroseconds(1);
-  SPI.transfer(0x42);   //Send register START location
-  SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x48);   //0x42  INPMUX 
-  SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
-  SPI.transfer(0x39);   //0x45  REF
-  SPI.transfer(0x04);   //0x46  IDACMAG
-  SPI.transfer(0xF9);   //0x47  IDACMUX
-  SPI.transfer(0xA0);   //0x48  VBIAS
-  delay(15);
-  SPI.transfer(0x00);
-  SPI.transfer(0x12); //transfer read command  
-  inByteH = SPI.transfer(0x00);
-  inByteI = SPI.transfer(0x00);
-  inByteJ = SPI.transfer(0x00);
-  delay(5);
-  SPI.transfer(0x42);   //Send register START location
-  SPI.transfer(0x01);   //how many registers to write to
-  SPI.transfer(0x95);   //0x42  INPMUX 
-  SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
-  SPI.transfer(0x00);
-  SPI.transfer(0x12); //transfer read command  
-  inByteH2 = SPI.transfer(0x00);
-  inByteI2 = SPI.transfer(0x00);
-  inByteJ2 = SPI.transfer(0x00);
-  delay(1);
-  digitalWrite(_ADCchipSelect, HIGH);
-
-  decVal_C = dataConvert(inByteH,inByteI,inByteJ);
-  decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
-  delay(5);  
-  
-
-  /* HALL SPIN -- phase 3 --*/
   digitalWrite(_ADCchipSelect, LOW);
   delayMicroseconds(1);
   SPI.transfer(0x50);   //Send register START location
@@ -780,30 +742,30 @@ void KickSat_Sensor::hallSpinB() {
   delayMicroseconds(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x59);   //0x42  INPMUX 
+  SPI.transfer(0x48);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
-  SPI.transfer(0xF4);   //0x47  IDACMUX
-  SPI.transfer(0x00);   //0x48  VBIAS  
-  delay(15);
+  SPI.transfer(0xF9);   //0x47  IDACMUX
+  SPI.transfer(0x00);   //0x48  VBIAS
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
-  inByteK = SPI.transfer(0x00);
-  inByteL = SPI.transfer(0x00);
-  inByteM = SPI.transfer(0x00);
+  inByteH = SPI.transfer(0x00);
+  inByteI = SPI.transfer(0x00);
+  inByteJ = SPI.transfer(0x00);
   delay(5);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
-  SPI.transfer(0x48);   //0x42  INPMUX 
+  SPI.transfer(0x59);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
-  inByteK2 = SPI.transfer(0x00);
-  inByteL2 = SPI.transfer(0x00);
-  inByteM2 = SPI.transfer(0x00);
+  inByteH2 = SPI.transfer(0x00);
+  inByteI2 = SPI.transfer(0x00);
+  inByteJ2 = SPI.transfer(0x00);
   delay(1);
   digitalWrite(_ADCchipSelect, HIGH);
   digitalWrite(_ADCchipSelect, LOW);
@@ -814,9 +776,45 @@ void KickSat_Sensor::hallSpinB() {
   SPI.transfer(0x00);   //GPIO0 enabled
   delay(1);
   digitalWrite(_ADCchipSelect, HIGH);
+  decVal_C = dataConvert(inByteH,inByteI,inByteJ);
+  decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
+  delay(1);  
+  
+
+  /* HALL SPIN -- phase 3 --*/
+  digitalWrite(_ADCchipSelect, LOW);
+  delayMicroseconds(1);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x06);   //how many registers to write to
+  SPI.transfer(0x59);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  SPI.transfer(0x1C);   //0x44  DATARATE
+  SPI.transfer(0x39);   //0x45  REF
+  SPI.transfer(0x04);   //0x46  IDACMAG
+  SPI.transfer(0xF4);   //0x47  IDACMUX
+  SPI.transfer(0xA0);   //0x48  VBIAS AIN4  
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteK = SPI.transfer(0x00);
+  inByteL = SPI.transfer(0x00);
+  inByteM = SPI.transfer(0x00);
+  delay(5);
+  SPI.transfer(0x42);   //Send register START location
+  SPI.transfer(0x01);   //how many registers to write to
+  SPI.transfer(0x48);   //0x42  INPMUX 
+  SPI.transfer(0x08);   //0x43  PGA
+  delay(5);
+  SPI.transfer(0x00);
+  SPI.transfer(0x12); //transfer read command  
+  inByteK2 = SPI.transfer(0x00);
+  inByteL2 = SPI.transfer(0x00);
+  inByteM2 = SPI.transfer(0x00);
+  delay(1);
+  digitalWrite(_ADCchipSelect, HIGH);
   decVal_D = dataConvert(inByteK,inByteL,inByteM);
   decVal_D2 = dataConvert(inByteK2,inByteL2,inByteM2);
-  delay(5);
+  delay(1);
 
   /* HALL SPIN -- phase 4 --*/
   digitalWrite(_ADCchipSelect, LOW);
@@ -833,12 +831,12 @@ void KickSat_Sensor::hallSpinB() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x84);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF5);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);   //NOP to get rid of junk?
   SPI.transfer(0x12); //transfer read command  
   inByteD = SPI.transfer(0x00);
@@ -847,9 +845,9 @@ void KickSat_Sensor::hallSpinB() {
   delay(5);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
-  SPI.transfer(0x59);   //0x42  INPMUX 
+  SPI.transfer(0x13);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteD2 = SPI.transfer(0x00);
@@ -883,10 +881,10 @@ void KickSat_Sensor::hallSpinB() {
   if (writeable){
     logfile.print(micros());
     logfile.print(",");
-    logfile.print(decVal_A,8),logfile.print(","),
-    logfile.print(decVal_B,8),logfile.print(","),
-    logfile.print(decVal_C,8),logfile.print(","),
-    logfile.print(decVal_D,8),logfile.print(","),
+//    logfile.print(decVal_A,8),logfile.print(","),
+//    logfile.print(decVal_B,8),logfile.print(","),
+//    logfile.print(decVal_C,8),logfile.print(","),
+//    logfile.print(decVal_D,8),logfile.print(","),
     logfile.print(vApplied,8),logfile.print(","),
     logfile.println(dataSpin, DEC);
     logfile.flush();
@@ -910,12 +908,12 @@ void KickSat_Sensor::hallSpinC() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0x7C);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF6);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH = SPI.transfer(0x00);
@@ -924,9 +922,9 @@ void KickSat_Sensor::hallSpinC() {
   delay(5);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
-  SPI.transfer(0x6C);   //0x42  INPMUX 
+  SPI.transfer(0xC6);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH2 = SPI.transfer(0x00);
@@ -936,21 +934,21 @@ void KickSat_Sensor::hallSpinC() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_C = dataConvert(inByteH,inByteI,inByteJ);
   decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
-  delay(5);
+  delay(1);
 
   /* ------- HALL SPIN -- phase 3 ------- */
   digitalWrite(_ADCchipSelect, LOW);
   delayMicroseconds(1);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x06);   //how many registers to write to
-  SPI.transfer(0x6C);   //0x42  INPMUX 
+  SPI.transfer(0xC6);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xF7);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS  
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
@@ -959,9 +957,9 @@ void KickSat_Sensor::hallSpinC() {
   delay(5);
   SPI.transfer(0x42);   //Send register START location
   SPI.transfer(0x01);   //how many registers to write to
-  SPI.transfer(0x7C);   //0x42  INPMUX 
+  SPI.transfer(0xC7);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA2 = SPI.transfer(0x00);
@@ -971,7 +969,7 @@ void KickSat_Sensor::hallSpinC() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_A = dataConvert(inByteA,inByteB,inByteC);
   decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
-  delay(5);   
+  delay(1);   
   
   float dataSpin = ((decVal_A+decVal_C)/2)*1000; //output in mV
   float vApplied = ((abs(decVal_A2)+abs(decVal_C2))/2)*1000; //output in mV
@@ -988,10 +986,10 @@ void KickSat_Sensor::hallSpinC() {
   if (writeable){
     logfile.print(micros());
     logfile.print(",");
-    logfile.print(decVal_A,8),logfile.print(","),
-    logfile.print(""),logfile.print(","),
-    logfile.print(decVal_C,8),logfile.print(","),
-    logfile.print(""),logfile.print(","),
+//    logfile.print(decVal_A,8),logfile.print(","),
+//    logfile.print(""),logfile.print(","),
+//    logfile.print(decVal_C,8),logfile.print(","),
+//    logfile.print(""),logfile.print(","),
     logfile.print(vApplied,8),logfile.print(","),
     logfile.println(dataSpin, DEC);
     logfile.flush();
@@ -1015,12 +1013,12 @@ void KickSat_Sensor::hallSpinD() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0xAC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xFB);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS  
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH = SPI.transfer(0x00);
@@ -1031,7 +1029,7 @@ void KickSat_Sensor::hallSpinD() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0xBC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteH2 = SPI.transfer(0x00);
@@ -1041,7 +1039,7 @@ void KickSat_Sensor::hallSpinD() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_C = dataConvert(inByteH,inByteI,inByteJ);
   decVal_C2 = dataConvert(inByteH2,inByteI2,inByteJ2);
-  delay(5);
+  delay(1);
 
   /* ------- HALL SPIN -- phase 3 ------- */
   digitalWrite(_ADCchipSelect, LOW);
@@ -1050,12 +1048,12 @@ void KickSat_Sensor::hallSpinD() {
   SPI.transfer(0x06);   //how many registers to write to
   SPI.transfer(0xBC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  SPI.transfer(0x9C);   //0x44  DATARATE
+  SPI.transfer(0x1C);   //0x44  DATARATE
   SPI.transfer(0x39);   //0x45  REF
   SPI.transfer(0x04);   //0x46  IDACMAG
   SPI.transfer(0xFA);   //0x47  IDACMUX
   SPI.transfer(0x00);   //0x48  VBIAS
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA = SPI.transfer(0x00);
@@ -1065,7 +1063,7 @@ void KickSat_Sensor::hallSpinD() {
   SPI.transfer(0x01);   //how many registers to write to
   SPI.transfer(0xAC);   //0x42  INPMUX 
   SPI.transfer(0x08);   //0x43  PGA
-  delay(15);
+  delay(5);
   SPI.transfer(0x00);
   SPI.transfer(0x12); //transfer read command  
   inByteA2 = SPI.transfer(0x00);
@@ -1075,7 +1073,7 @@ void KickSat_Sensor::hallSpinD() {
   digitalWrite(_ADCchipSelect, HIGH);
   decVal_A = dataConvert(inByteA,inByteB,inByteC);
   decVal_A2 = dataConvert(inByteA2,inByteB2,inByteC2);
-  delay(5);   
+  delay(1);   
   
   float dataSpin = ((decVal_A+decVal_C)/2)*1000; //output in mV
   float vApplied = ((abs(decVal_A2)+abs(decVal_C2))/2)*1000; //output in mV
@@ -1092,10 +1090,10 @@ void KickSat_Sensor::hallSpinD() {
   if (writeable){
     logfile.print(micros());
     logfile.print(",");
-    logfile.print(decVal_A,8),logfile.print(","),
-    logfile.print(""),logfile.print(","),
-    logfile.print(decVal_C,8),logfile.print(","),
-    logfile.print(""),logfile.print(","),
+//    logfile.print(decVal_A,8),logfile.print(","),
+//    logfile.print(""),logfile.print(","),
+//    logfile.print(decVal_C,8),logfile.print(","),
+//    logfile.print(""),logfile.print(","),
     logfile.print(vApplied,8),logfile.print(","),
     logfile.println(dataSpin, DEC);
     logfile.flush();

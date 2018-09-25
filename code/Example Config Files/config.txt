@@ -1,0 +1,6 @@
+start,
+delay 500,
+temp t,
+delay 100,
+read 1 12 15 2 t 200 200 0 P1,
+delay 10,
