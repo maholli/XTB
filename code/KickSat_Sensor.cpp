@@ -197,8 +197,7 @@ void KickSat_Sensor::BatteryVoltage(bool save) {                //Measure the ba
   Serial.print("Battery Voltage: ");
   Serial.println(measuredvbat, 3);
   if (save){
-    logfile.print(measuredvbat, 3);
-    logfile.print(",");
+    logfile.println("B,"+String(micros())+","+String(measuredvbat,3)); 
   }
 }
 
@@ -476,7 +475,7 @@ void KickSat_Sensor::readTemp(bool save) {
   Serial.print("Temperature:\t\t");
   Serial.println(tempData,3);
   if (save){
-    logfile.print("T,"+String(micros())+","+String(tempData,3));  
+    logfile.println("T,"+String(micros())+","+String(tempData,3));  
   }
 }
 
@@ -505,7 +504,8 @@ void KickSat_Sensor::CreateFile() {
 }
 
 void KickSat_Sensor::writeHeader() {
-  logfile.println("Time (sec), var[1], var[2], var[3], etc...");
+  logfile.println("Data Label, Time (micro sec), var[1], var[2], var[3], etc...");
+  logfile.println("#,XTB_Arduino,v2a,2018-09-27,M.Holliday");
 }
 
 
